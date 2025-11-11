@@ -1,121 +1,90 @@
 import { Link } from 'react-router-dom'
-import { useAuth } from '@/context/AuthContext'
-import { useTheme } from '@/context/ThemeContext'
-import { Moon, Sun, User, LogOut, Menu } from 'lucide-react'
+import { Search, User, ChevronDown } from 'lucide-react'
 import { useState } from 'react'
 
 export const Header = () => {
-	const { isAuthenticated, user, logout } = useAuth()
-	const { theme, toggleTheme } = useTheme()
-	const [isMenuOpen, setIsMenuOpen] = useState(false)
+	const [showUserMenu, setShowUserMenu] = useState(false)
 
 	return (
-		<header className="sticky top-0 z-50 w-full border-b bg-white/80 backdrop-blur-sm dark:bg-gray-900/80">
+		<header className="sticky top-0 z-50 bg-gray-900 shadow-lg">
 			<div className="container mx-auto px-4">
-				<div className="flex h-16 items-center justify-between">
-					{/* Logo */}
-					<Link to="/" className="flex items-center space-x-2">
-						<h1 className="text-2xl font-bold text-primary">FinalSOA</h1>
-					</Link>
-
-					{/* Desktop Navigation */}
-					<nav className="hidden items-center space-x-6 md:flex">
-						<Link to="/books" className="hover:text-primary transition-colors">
-							Books
+				<div className="flex items-center justify-between h-16">
+					{/* Logo Section */}
+					<div className="flex items-center space-x-8">
+						<Link to="/" className="flex items-center space-x-2">
+							<div className="text-orange-500 text-2xl font-bold">
+								<span className="text-3xl">7</span>
+								<span className="text-white ml-2">ANIME</span>
+								<span className="text-orange-500">NETWORK</span>
+							</div>
 						</Link>
-						<Link to="/movies" className="hover:text-primary transition-colors">
-							Movies
-						</Link>
-						<Link to="/premium" className="hover:text-primary transition-colors">
-							Premium
-						</Link>
-					</nav>
 
-					{/* Actions */}
-					<div className="flex items-center space-x-4">
-						{/* Theme Toggle */}
-						<button
-							onClick={toggleTheme}
-							className="rounded-lg p-2 hover:bg-gray-100 dark:hover:bg-gray-800"
-							aria-label="Toggle theme"
-						>
-							{theme === 'light' ? <Moon size={20} /> : <Sun size={20} />}
-						</button>
-
-						{/* Auth Actions */}
-						{isAuthenticated ? (
-							<div className="flex items-center space-x-2">
-								<Link
-									to="/profile"
-									className="flex items-center space-x-2 rounded-lg px-3 py-2 hover:bg-gray-100 dark:hover:bg-gray-800"
-								>
-									<User size={20} />
-									<span className="hidden md:inline">{user?.name}</span>
-								</Link>
-								<button
-									onClick={logout}
-									className="flex items-center space-x-2 rounded-lg px-3 py-2 hover:bg-gray-100 dark:hover:bg-gray-800"
-									aria-label="Logout"
-								>
-									<LogOut size={20} />
+						{/* Main Navigation */}
+						<nav className="hidden lg:flex items-center space-x-6">
+							<Link 
+								to="/" 
+								className="text-gray-300 hover:text-orange-500 transition-colors font-medium"
+							>
+								News
+							</Link>
+							<div className="relative group">
+								<button className="text-gray-300 hover:text-orange-500 transition-colors font-medium flex items-center">
+									Anime
+									<ChevronDown className="ml-1 h-4 w-4" />
 								</button>
+								<div className="absolute hidden group-hover:block top-full left-0 mt-2 w-48 bg-gray-800 rounded-md shadow-xl">
+									<Link to="/anime/spring" className="block px-4 py-2 text-gray-300 hover:bg-gray-700 hover:text-orange-500">Spring</Link>
+									<Link to="/anime/summer" className="block px-4 py-2 text-gray-300 hover:bg-gray-700 hover:text-orange-500">Summer</Link>
+									<Link to="/anime/fall" className="block px-4 py-2 text-gray-300 hover:bg-gray-700 hover:text-orange-500">Fall</Link>
+									<Link to="/anime/winter" className="block px-4 py-2 text-gray-300 hover:bg-gray-700 hover:text-orange-500">Winter</Link>
+								</div>
 							</div>
-						) : (
-							<div className="flex items-center space-x-2">
-								<Link
-									to="/auth/login"
-									className="rounded-lg px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-800"
-								>
-									Login
-								</Link>
-								<Link
-									to="/auth/register"
-									className="rounded-lg bg-primary px-4 py-2 text-white hover:bg-primary-dark"
-								>
-									Sign Up
-								</Link>
-							</div>
-						)}
+							<Link 
+								to="/reviews" 
+								className="text-gray-300 hover:text-orange-500 transition-colors font-medium"
+							>
+								Reviews
+							</Link>
+						</nav>
+					</div>
 
-						{/* Mobile Menu Button */}
-						<button
-							onClick={() => setIsMenuOpen(!isMenuOpen)}
-							className="md:hidden rounded-lg p-2 hover:bg-gray-100 dark:hover:bg-gray-800"
-							aria-label="Toggle menu"
-						>
-							<Menu size={24} />
-						</button>
+					{/* Right Section */}
+					<div className="flex items-center space-x-4">
+						{/* Search Bar */}
+						<div className="hidden md:flex items-center bg-gray-800 rounded-md px-3 py-1.5">
+							<input
+								type="text"
+								placeholder="Search for your favourites"
+								className="bg-transparent text-gray-300 placeholder-gray-500 outline-none w-64 text-sm"
+							/>
+							<Search className="h-4 w-4 text-gray-400 ml-2" />
+						</div>
+
+						{/* User Section */}
+						<div className="relative">
+							<button
+								onClick={() => setShowUserMenu(!showUserMenu)}
+								className="flex items-center space-x-2 text-gray-300 hover:text-orange-500 transition-colors"
+							>
+								<span className="text-sm">Hello, Oneesama</span>
+								<ChevronDown className="h-4 w-4" />
+								<div className="w-8 h-8 rounded-full bg-orange-500 flex items-center justify-center">
+									<User className="h-5 w-5 text-white" />
+								</div>
+							</button>
+							
+							{showUserMenu && (
+								<div className="absolute right-0 mt-2 w-48 bg-gray-800 rounded-md shadow-xl">
+									<Link to="/profile" className="block px-4 py-2 text-gray-300 hover:bg-gray-700 hover:text-orange-500">Profile</Link>
+									<Link to="/watchlist" className="block px-4 py-2 text-gray-300 hover:bg-gray-700 hover:text-orange-500">Watchlist</Link>
+									<Link to="/settings" className="block px-4 py-2 text-gray-300 hover:bg-gray-700 hover:text-orange-500">Settings</Link>
+									<hr className="border-gray-700 my-1" />
+									<button className="block w-full text-left px-4 py-2 text-gray-300 hover:bg-gray-700 hover:text-orange-500">Logout</button>
+								</div>
+							)}
+						</div>
 					</div>
 				</div>
-
-				{/* Mobile Navigation */}
-				{isMenuOpen && (
-					<nav className="md:hidden border-t py-4">
-						<div className="flex flex-col space-y-3">
-							<Link
-								to="/books"
-								className="px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg"
-								onClick={() => setIsMenuOpen(false)}
-							>
-								Books
-							</Link>
-							<Link
-								to="/movies"
-								className="px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg"
-								onClick={() => setIsMenuOpen(false)}
-							>
-								Movies
-							</Link>
-							<Link
-								to="/premium"
-								className="px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg"
-								onClick={() => setIsMenuOpen(false)}
-							>
-								Premium
-							</Link>
-						</div>
-					</nav>
-				)}
 			</div>
 		</header>
 	)

@@ -1,139 +1,90 @@
 import { Link } from 'react-router-dom'
-import { Facebook, Twitter, Instagram, Youtube } from 'lucide-react'
+import { Facebook, Twitter } from 'lucide-react'
 
 export const Footer = () => {
 	const currentYear = new Date().getFullYear()
 
 	return (
-		<footer className="border-t bg-gray-50 dark:bg-gray-900">
+		<footer className="bg-gray-900 text-gray-300">
+			{/* Main Footer */}
 			<div className="container mx-auto px-4 py-12">
-				<div className="grid grid-cols-1 gap-8 md:grid-cols-4">
-					{/* Brand */}
-					<div className="space-y-4">
-						<h3 className="text-xl font-bold">FinalSOA</h3>
-						<p className="text-sm text-gray-600 dark:text-gray-400">
-							Your ultimate platform for books and movies streaming.
-						</p>
-						<div className="flex space-x-4">
-							<a
-								href="https://facebook.com"
-								target="_blank"
-								rel="noopener noreferrer"
-								className="hover:text-primary transition-colors"
-							>
-								<Facebook size={20} />
-							</a>
-							<a
-								href="https://twitter.com"
-								target="_blank"
-								rel="noopener noreferrer"
-								className="hover:text-primary transition-colors"
-							>
-								<Twitter size={20} />
-							</a>
-							<a
-								href="https://instagram.com"
-								target="_blank"
-								rel="noopener noreferrer"
-								className="hover:text-primary transition-colors"
-							>
-								<Instagram size={20} />
-							</a>
-							<a
-								href="https://youtube.com"
-								target="_blank"
-								rel="noopener noreferrer"
-								className="hover:text-primary transition-colors"
-							>
-								<Youtube size={20} />
-							</a>
+				<div className="flex flex-col lg:flex-row items-center justify-between">
+					{/* Logo and Copyright */}
+					<div className="flex items-center space-x-8 mb-6 lg:mb-0">
+						<div className="text-2xl font-bold">
+							<span className="text-3xl text-orange-500">7</span>
+							<span className="text-white ml-2">ANIME</span>
+							<span className="text-orange-500">NETWORK</span>
 						</div>
 					</div>
 
-					{/* Quick Links */}
-					<div>
-						<h4 className="mb-4 font-semibold">Quick Links</h4>
-						<ul className="space-y-2 text-sm">
-							<li>
-								<Link to="/books" className="text-gray-600 hover:text-primary dark:text-gray-400">
-									Books
-								</Link>
-							</li>
-							<li>
-								<Link to="/movies" className="text-gray-600 hover:text-primary dark:text-gray-400">
-									Movies
-								</Link>
-							</li>
-							<li>
-								<Link to="/premium" className="text-gray-600 hover:text-primary dark:text-gray-400">
-									Premium
-								</Link>
-							</li>
-							<li>
-								<Link to="/search" className="text-gray-600 hover:text-primary dark:text-gray-400">
-									Search
-								</Link>
-							</li>
-						</ul>
+					{/* Navigation Links */}
+					<div className="flex flex-wrap items-center justify-center gap-6 mb-6 lg:mb-0">
+						<Link to="/news" className="hover:text-orange-500 transition-colors">
+							News
+						</Link>
+						<Link to="/anime" className="hover:text-orange-500 transition-colors">
+							Anime
+						</Link>
+						<Link to="/reviews" className="hover:text-orange-500 transition-colors">
+							Reviews
+						</Link>
+						<Link to="/about" className="hover:text-orange-500 transition-colors">
+							About
+						</Link>
+						<Link to="/contact" className="hover:text-orange-500 transition-colors">
+							Contact
+						</Link>
+						<Link to="/privacy" className="hover:text-orange-500 transition-colors">
+							Privacy Policy
+						</Link>
+						<Link to="/terms" className="hover:text-orange-500 transition-colors">
+							Terms of Use
+						</Link>
+						<Link to="/sitemap" className="hover:text-orange-500 transition-colors">
+							Sitemap
+						</Link>
 					</div>
 
-					{/* Support */}
-					<div>
-						<h4 className="mb-4 font-semibold">Support</h4>
-						<ul className="space-y-2 text-sm">
-							<li>
-								<a href="#" className="text-gray-600 hover:text-primary dark:text-gray-400">
-									Help Center
-								</a>
-							</li>
-							<li>
-								<a href="#" className="text-gray-600 hover:text-primary dark:text-gray-400">
-									Contact Us
-								</a>
-							</li>
-							<li>
-								<a href="#" className="text-gray-600 hover:text-primary dark:text-gray-400">
-									FAQs
-								</a>
-							</li>
-							<li>
-								<a href="#" className="text-gray-600 hover:text-primary dark:text-gray-400">
-									Terms of Service
-								</a>
-							</li>
-						</ul>
-					</div>
-
-					{/* Legal */}
-					<div>
-						<h4 className="mb-4 font-semibold">Legal</h4>
-						<ul className="space-y-2 text-sm">
-							<li>
-								<a href="#" className="text-gray-600 hover:text-primary dark:text-gray-400">
-									Privacy Policy
-								</a>
-							</li>
-							<li>
-								<a href="#" className="text-gray-600 hover:text-primary dark:text-gray-400">
-									Cookie Policy
-								</a>
-							</li>
-							<li>
-								<a href="#" className="text-gray-600 hover:text-primary dark:text-gray-400">
-									DMCA
-								</a>
-							</li>
-							<li>
-								<a href="#" className="text-gray-600 hover:text-primary dark:text-gray-400">
-									Licensing
-								</a>
-							</li>
-						</ul>
+					{/* Social Icons */}
+					<div className="flex items-center space-x-4">
+						<a
+							href="https://facebook.com"
+							target="_blank"
+							rel="noopener noreferrer"
+							className="p-2 bg-gray-800 rounded hover:bg-gray-700 transition-colors"
+							aria-label="Facebook"
+						>
+							<Facebook className="h-5 w-5" />
+						</a>
+						<a
+							href="https://twitter.com"
+							target="_blank"
+							rel="noopener noreferrer"
+							className="p-2 bg-gray-800 rounded hover:bg-gray-700 transition-colors"
+							aria-label="Twitter"
+						>
+							<Twitter className="h-5 w-5" />
+						</a>
+						<a
+							href="/rss"
+							className="p-2 bg-gray-800 rounded hover:bg-gray-700 transition-colors"
+							aria-label="RSS Feed"
+						>
+							<svg className="h-5 w-5" viewBox="0 0 24 24" fill="currentColor">
+								<path d="M3.429 5.1v2.4c7.248 0 13.114 5.886 13.114 13.142h2.4C18.943 12.18 11.862 5.1 3.429 5.1zm0 4.8v2.4a5.351 5.351 0 015.371 5.342h2.4c0-4.302-3.47-7.742-7.771-7.742zM6.171 15.642a1.371 1.371 0 11-2.742 0 1.371 1.371 0 012.742 0z" />
+							</svg>
+						</a>
 					</div>
 				</div>
+			</div>
 
-				<div className="mt-8 border-t pt-8 text-center text-sm text-gray-600 dark:text-gray-400">
-					<p>&copy; {currentYear} FinalSOA. All rights reserved.</p>
+			{/* Bottom Bar */}
+			<div className="border-t border-gray-800">
+				<div className="container mx-auto px-4 py-4">
+					<p className="text-center text-sm text-gray-500">
+						Copyright © {currentYear} Anime Network. All rights reserved.
+					</p>
 				</div>
 			</div>
 		</footer>
