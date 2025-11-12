@@ -1,6 +1,6 @@
 import { Layout } from '@/components/layout/Layout'
 import { HeroBanner } from '@/components/home/HeroBanner'
-import { AnimeGrid } from '@/components/home/AnimeGrid'
+import { ContentGrid } from '@/components/home/ContentGrid'
 
 const HomePage = () => {
 	return (
@@ -9,7 +9,7 @@ const HomePage = () => {
 			<HeroBanner />
 
 			{/* Anime Grid Section */}
-			<AnimeGrid />
+			<ContentGrid />
 		</Layout>
 	)
 }

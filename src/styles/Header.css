@@ -114,12 +114,19 @@
     cursor: pointer;
     transition: all 0.2s ease;
     position: relative;
-    border-radius: 6px;
+}
+
+.nav-link.active {
+    color: #ff6b35;
+    border-bottom: 2px solid #ff6b35;
+}
+
+.nav-link.active:hover {
+    color: #ff6b35;
 }
 
 .nav-link:hover {
     color: #ff6b35;
-    background: rgba(255, 107, 53, 0.1);
 }
 
 .nav-icon {

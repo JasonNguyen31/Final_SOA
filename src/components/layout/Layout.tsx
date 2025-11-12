@@ -1,6 +1,8 @@
 import { type ReactNode } from 'react'
 import Header from './Header'
 import Footer from './Footer'
+import { usePageTitle } from '@/hooks/usePageTitle'
+import '@/styles/Layout.css'
 
 interface LayoutProps {
 	children: ReactNode
@@ -9,10 +11,12 @@ interface LayoutProps {
 }
 
 export const Layout = ({ children, showHeader = true, showFooter = true }: LayoutProps) => {
+	usePageTitle()
+
 	return (
-		<div className="flex min-h-screen flex-col">
+		<div className="app-layout">
 			{showHeader && <Header />}
-			<main className="flex-1">{children}</main>
+			<main className="app-main">{children}</main>
 			{showFooter && <Footer />}
 		</div>
 	)

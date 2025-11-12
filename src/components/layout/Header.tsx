@@ -1,13 +1,17 @@
 import { Search, ChevronDown } from 'lucide-react'
 import { useState } from 'react'
+import { useLocation } from 'react-router-dom'
 import '@/styles/Header.css'
-import logoCoverImage from '@/assets/images/imagecoverheader.jpg'
+import logoCoverImage from '@/assets/images/header-logo.jpg'
 
 export const Header = () => {
+	const location = useLocation()
 	const [showUserMenu, setShowUserMenu] = useState(false)
 	const [showMoviesMenu, setShowMoviesMenu] = useState(false)
 	const [showBooksMenu, setShowBooksMenu] = useState(false)
-
+	const isActive = (path: string) => {
+		return location.pathname === path || location.pathname.startsWith(path + '/')
+	}
 	return (
 		<header className="header">
 			<div className="header-container">
@@ -35,7 +39,7 @@ export const Header = () => {
 					<div className="header-right">
 						{/* Main Navigation */}
 						<nav className="main-nav">
-							<a href="/" className="nav-link">
+							<a href="/" className={`nav-link ${location.pathname === '/' ? 'active' : ''}`}>
 								Home
 							</a>
 
@@ -44,7 +48,7 @@ export const Header = () => {
 								onMouseEnter={() => setShowMoviesMenu(true)}
 								onMouseLeave={() => setShowMoviesMenu(false)}
 							>
-								<button className="nav-link">
+								<button className={`nav-link ${isActive('/movies') ? 'active' : ''}`}>
 									Movies
 									<ChevronDown className="nav-icon" />
 								</button>
@@ -63,7 +67,7 @@ export const Header = () => {
 								onMouseEnter={() => setShowBooksMenu(true)}
 								onMouseLeave={() => setShowBooksMenu(false)}
 							>
-								<button className="nav-link">
+								<button className={`nav-link ${isActive('/books') ? 'active' : ''}`}>
 									Books
 									<ChevronDown className="nav-icon" />
 								</button>
@@ -76,7 +80,7 @@ export const Header = () => {
 								)}
 							</div>
 
-							<a href="/news" className="nav-link">
+							<a href="/news" className={`nav-link ${isActive('/news') ? 'active' : ''}`}>
 								News
 							</a>
 						</nav>
