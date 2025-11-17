@@ -458,6 +458,32 @@ async def get_recommended_movies(user_id: str, limit: int = 5):
     ]
 
     movies = await movies_collection.aggregate(pipeline).to_list(limit)
+
+    # If no recommendations found (user has no history), return popular movies
+    if not movies and not genres:
+        pipeline = [
+            {"$match": {
+                "isActive": True,
+                "isDeleted": False,
+                "_id": {"$nin": watched_movie_ids}
+            }},
+            {"$sort": {"totalViews": -1}},
+            {"$limit": limit},
+            {"$project": {
+                "id": {"$toString": "$_id"},
+                "title": 1,
+                "thumbnailUrl": 1,
+                "genres": 1,
+                "viewCount": "$totalViews",
+                "rating": 1,
+                "releaseYear": 1,
+                "duration": 1,
+                "totalRatings": 1,
+                "isPremium": 1
+            }}
+        ]
+        movies = await movies_collection.aggregate(pipeline).to_list(limit)
+
     return movies
 
 # 9. MOVIE OF THE WEEK - Most viewed this week

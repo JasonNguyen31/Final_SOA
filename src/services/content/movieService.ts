@@ -166,8 +166,8 @@ class MovieService {
 	 * Get continue watching movies (progress > 0% and < 90%)
 	 */
 	async getContinueWatching(): Promise<Movie[]> {
-		const response = await movieApiClient.get<{success: boolean, data: Movie[]}>(`${this.baseUrl}/continue-watching`)
-		return response.data.data
+		const response = await movieApiClient.get<{success: boolean, data: {movies: Movie[]}}>(`${this.baseUrl}/continue-watching`)
+		return response.data.data.movies || []
 	}
 
 	/**
@@ -200,10 +200,16 @@ class MovieService {
 	 * Get recommended movies
 	 */
 	async getRecommendedMovies(limit: number = 10): Promise<Movie[]> {
-		const response = await movieApiClient.get<{success: boolean, data: Movie[]}>(`${this.baseUrl}/recommended`, {
-			params: { limit }
-		})
-		return response.data.data
+		try {
+			const response = await movieApiClient.get<{success: boolean, data: Movie[]}>(`${this.baseUrl}/recommended`, {
+				params: { limit }
+			})
+			console.log('Recommended movies response:', response.data)
+			return response.data.data || []
+		} catch (error) {
+			console.error('Error fetching recommended movies:', error)
+			throw error
+		}
 	}
 
 	/**

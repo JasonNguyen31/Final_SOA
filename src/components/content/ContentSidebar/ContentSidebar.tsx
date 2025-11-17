@@ -2,14 +2,14 @@ import { Link } from 'react-router-dom'
 import { Star, Plus, Play } from 'lucide-react'
 import { useState, useEffect } from 'react'
 import { movieService, type Movie } from '@/services/content/movieService'
+import { useAuth } from '@/context/AuthContext'
 
 interface ContentSidebarProps {
 	onOpenModal: (content: 'episodes' | 'anime-week' | 'videos') => void
 }
 
 export const ContentSidebar: React.FC<ContentSidebarProps> = ({ onOpenModal }) => {
-	const [sidebarTab, setSidebarTab] = useState<'recent' | 'recommended'>('recent')
-	const [recentWatching, setRecentWatching] = useState<Movie[]>([])
+	const { isAuthenticated } = useAuth()
 	const [recommendedMovies, setRecommendedMovies] = useState<Movie[]>([])
 	const [movieOfWeek, setMovieOfWeek] = useState<Movie | null>(null)
 	const [loading, setLoading] = useState(true)
@@ -19,20 +19,23 @@ export const ContentSidebar: React.FC<ContentSidebarProps> = ({ onOpenModal }) =
 		const fetchData = async () => {
 			try {
 				setLoading(true)
-				const [recent, recommended, movieWeek] = await Promise.all([
-					movieService.getWatchHistory().then(async () => {
-						// getWatchHistory returns WatchProgress[], we need to get full movie data
-						try {
-							return await movieService.getContinueWatching()
-						} catch {
-							return []
-						}
-					}),
-					movieService.getRecommendedMovies(5),
-					movieService.getMovieOfTheWeek()
-				])
 
-				setRecentWatching(recent)
+				// Fetch public endpoints (always available)
+				const movieWeek = await movieService.getMovieOfTheWeek().catch((error) => {
+					console.error('Failed to fetch movie of the week:', error)
+					return null
+				})
+
+				// Fetch recommended movies only if user is logged in
+				let recommended: Movie[] = []
+
+				if (isAuthenticated) {
+					recommended = await movieService.getRecommendedMovies(5).catch((error) => {
+						console.error('Failed to fetch recommended movies:', error)
+						return []
+					})
+				}
+
 				setRecommendedMovies(recommended)
 				setMovieOfWeek(movieWeek)
 			} catch (error) {
@@ -43,7 +46,7 @@ export const ContentSidebar: React.FC<ContentSidebarProps> = ({ onOpenModal }) =
 		}
 
 		fetchData()
-	}, [])
+	}, [isAuthenticated])
 
 	const renderStars = (rating: number) => {
 		return [...Array(5)].map((_, i) => (
@@ -54,8 +57,6 @@ export const ContentSidebar: React.FC<ContentSidebarProps> = ({ onOpenModal }) =
 		))
 	}
 
-	const currentMovies = sidebarTab === 'recent' ? recentWatching : recommendedMovies
-
 	const renderRating = (movie: Movie) => {
 		const rating = movie.totalRatings && movie.totalRatings > 0 ? movie.totalRatings / 20 : 3
 		return Math.min(Math.max(rating, 0), 5)
@@ -63,36 +64,15 @@ export const ContentSidebar: React.FC<ContentSidebarProps> = ({ onOpenModal }) =
 
 	return (
 		<aside className="content-sidebar">
-			{/* Recent Watching */}
+			{/* Recommended Movies */}
 			<div className="sidebar-section">
 				<div className="sidebar-header">
-					<h3 className="sidebar-title">Recent Watching</h3>
-					<button
-						onClick={() => onOpenModal('episodes')}
-						className="sidebar-link-button"
-					>
-						View all
-					</button>
-				</div>
-
-				<div className="sidebar-tabs">
-					<button
-						onClick={() => setSidebarTab('recent')}
-						className={`sidebar-tab ${sidebarTab === 'recent' ? 'active' : ''}`}
-					>
-						History
-					</button>
-					<button
-						onClick={() => setSidebarTab('recommended')}
-						className={`sidebar-tab ${sidebarTab === 'recommended' ? 'active' : ''}`}
-					>
-						Recommended
-					</button>
+					<h3 className="sidebar-title">Recommended Movies</h3>
 				</div>
 
 				<div className="sidebar-list">
-					{!loading && currentMovies.length > 0 ? (
-						currentMovies.map((movie: Movie) => (
+					{!loading && recommendedMovies.length > 0 ? (
+						recommendedMovies.map((movie: Movie) => (
 							<Link key={movie.id} to={`/movies/${movie.id}/watch`} className="sidebar-item">
 								<img src={movie.thumbnailUrl || '/placeholder.jpg'} alt={movie.title} className="sidebar-item-image" />
 								<div className="sidebar-item-info">
@@ -105,7 +85,7 @@ export const ContentSidebar: React.FC<ContentSidebarProps> = ({ onOpenModal }) =
 					) : loading ? (
 						<div className="sidebar-empty">Loading...</div>
 					) : (
-						<div className="sidebar-empty">No movies available</div>
+						<div className="sidebar-empty">Sign in to see recommendations</div>
 					)}
 				</div>
 			</div>

@@ -108,13 +108,6 @@ async def continue_watching(
 ):
     return await continue_watching_controller(limit, user_payload["sub"])
 
-@router.get("/{movie_id}")
-async def get_movie(
-    movie_id: str,
-    user_payload = Depends(verify_token_optional)
-):
-    return await get_movie_controller(movie_id, user_payload)
-
 # RECOMMENDED MOVIES
 @router.get("/recommended")
 async def recommended(
@@ -127,3 +120,11 @@ async def recommended(
 @router.get("/special/movie-of-week")
 async def movie_of_week():
     return await movie_of_week_controller()
+
+# DETAIL – GENERIC (MUST BE LAST)
+@router.get("/{movie_id}")
+async def get_movie(
+    movie_id: str,
+    user_payload = Depends(verify_token_optional)
+):
+    return await get_movie_controller(movie_id, user_payload)
