@@ -25,8 +25,8 @@
 /* Modal Container */
 .auth-modal-container {
     position: relative;
-    width: 100%;
-    max-width: 480px;
+    width: 480px;
+    max-width: calc(100vw - 40px);
     max-height: 80vh;
     background: #1a1a1a;
     border-radius: 16px;
@@ -35,7 +35,7 @@
     box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
     animation: slideUp 0.4s ease;
     box-sizing: border-box;
-    flex-shrink: 1;
+    flex: 0 0 auto;
 }
 
 @keyframes slideUp {
@@ -106,6 +106,8 @@
     z-index: 1;
     padding: 48px 40px;
     box-sizing: border-box;
+    min-width: 0;
+    width: 100%;
 }
 
 /* Custom scrollbar cho modal container */
@@ -132,6 +134,7 @@
     width: 100%;
     overflow: hidden;
     box-sizing: border-box;
+    min-width: 0;
 }
 
 .auth-title {
@@ -166,6 +169,7 @@
     flex-direction: column;
     gap: 8px;
     min-width: 0;
+    width: 100%;
 }
 
 .form-label {
@@ -181,6 +185,7 @@
     align-items: center;
     gap: 8px;
     min-width: 0;
+    width: 100%;
 }
 
 .input-icon {
