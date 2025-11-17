@@ -1,0 +1,115 @@
+/* Input Wrapper */
+.ui-input-wrapper {
+	display: flex;
+	flex-direction: column;
+	gap: 6px;
+}
+
+.ui-input-wrapper--full-width {
+	width: 100%;
+}
+
+/* Label */
+.ui-input-label {
+	font-size: 14px;
+	font-weight: 500;
+	color: #e0e0e0;
+}
+
+/* Input Container */
+.ui-input-container {
+	position: relative;
+	display: flex;
+	align-items: center;
+}
+
+/* Input Base */
+.ui-input {
+	width: 100%;
+	padding: 10px 14px;
+	font-size: 14px;
+	font-family: inherit;
+	color: #fff;
+	background: rgba(255, 255, 255, 0.05);
+	border: 1px solid rgba(255, 255, 255, 0.1);
+	border-radius: 8px;
+	transition: all 0.3s ease;
+	outline: none;
+}
+
+.ui-input::placeholder {
+	color: rgba(255, 255, 255, 0.4);
+}
+
+.ui-input:hover:not(:disabled) {
+	border-color: rgba(255, 255, 255, 0.2);
+	background: rgba(255, 255, 255, 0.08);
+}
+
+.ui-input:focus {
+	border-color: #ff6b35;
+	background: rgba(255, 255, 255, 0.1);
+	box-shadow: 0 0 0 3px rgba(255, 107, 53, 0.1);
+}
+
+/* With Icons */
+.ui-input--with-left-icon {
+	padding-left: 42px;
+}
+
+.ui-input--with-right-icon {
+	padding-right: 42px;
+}
+
+/* Icons */
+.ui-input-icon {
+	position: absolute;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	color: rgba(255, 255, 255, 0.5);
+	pointer-events: none;
+}
+
+.ui-input-icon--left {
+	left: 12px;
+}
+
+.ui-input-icon--right {
+	right: 12px;
+}
+
+.ui-input-icon svg {
+	width: 18px;
+	height: 18px;
+}
+
+/* Error State */
+.ui-input-wrapper--error .ui-input {
+	border-color: #ff4444;
+}
+
+.ui-input-wrapper--error .ui-input:focus {
+	box-shadow: 0 0 0 3px rgba(255, 68, 68, 0.1);
+}
+
+.ui-input-error {
+	font-size: 13px;
+	color: #ff4444;
+}
+
+/* Helper Text */
+.ui-input-helper {
+	font-size: 13px;
+	color: rgba(255, 255, 255, 0.6);
+}
+
+/* Disabled State */
+.ui-input:disabled {
+	opacity: 0.5;
+	cursor: not-allowed;
+}
+
+.ui-input-wrapper--disabled {
+	opacity: 0.5;
+}

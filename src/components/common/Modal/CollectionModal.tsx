@@ -1,6 +1,7 @@
 import { createPortal } from 'react-dom'
-import { X, Bookmark, Play, Trash2, ExternalLink } from 'lucide-react'
+import { X, Bookmark, Play, Trash2 } from 'lucide-react'
 import { useState, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { collectionService } from '../../../services/interaction/collectionService'
 import './CollectionModal.css'
 import type { Collection } from '@/types/collection.types'
@@ -11,6 +12,7 @@ interface CollectionModalProps {
 }
 
 export const CollectionModal = ({ isOpen, onClose }: CollectionModalProps) => {
+	const navigate = useNavigate()
 	const [collections, setCollections] = useState<Collection[]>([])
 	const [activeCollectionId, setActiveCollectionId] = useState<string | null>(null)
 	const [loading, setLoading] = useState(true)
@@ -58,6 +60,15 @@ export const CollectionModal = ({ isOpen, onClose }: CollectionModalProps) => {
 		return collections.find((c) => c._id === activeCollectionId)
 	}
 
+	const handlePlayMovie = (contentId: string, contentType: string) => {
+		onClose()
+		if (contentType === 'movie') {
+			navigate(`/movies/${contentId}/watch`)
+		} else if (contentType === 'book') {
+			navigate(`/books/${contentId}/read`)
+		}
+	}
+
 	const renderCollectionItems = () => {
 		const activeCollection = getActiveCollection()
 
@@ -80,19 +91,17 @@ export const CollectionModal = ({ isOpen, onClose }: CollectionModalProps) => {
 		return (
 			<div className="collection-grid">
 				{activeCollection.items.map((item) => (
-					<div key={item.contentId} className="collection-item">
-						<div className="collection-item-image">
+					<div key={item.contentId} className="collection-item-card">
+						<div className="collection-item-image-wrapper">
 							<img src={item.thumbnail || '/placeholder.jpg'} alt={item.title} />
 							<div className="collection-item-overlay">
-								{item.contentType === 'movie' ? (
-									<button className="overlay-btn" title="Play">
-										<Play size={20} />
-									</button>
-								) : (
-									<button className="overlay-btn" title="View">
-										<ExternalLink size={20} />
-									</button>
-								)}
+								<button
+									className="overlay-btn play"
+									title="Play"
+									onClick={() => handlePlayMovie(item.contentId, item.contentType)}
+								>
+									<Play size={20} />
+								</button>
 								<button
 									className="overlay-btn delete"
 									title="Remove"
@@ -102,15 +111,13 @@ export const CollectionModal = ({ isOpen, onClose }: CollectionModalProps) => {
 								</button>
 							</div>
 						</div>
-						<div className="collection-item-info">
+						<div className="collection-item-details">
 							<h4 className="collection-item-title">{item.title}</h4>
-							<div className="collection-item-meta">
-								<span className="meta-type">
-									{item.contentType === 'movie' ? 'Movie' : 'Book'}
-								</span>
+							<div className="collection-item-type">
+								{item.contentType === 'movie' ? '🎬 Movie' : '📖 Book'}
 							</div>
-							<span className="collection-added">
-								Added: {new Date(item.addedAt).toLocaleDateString('en-CA')}
+							<span className="collection-item-date">
+								Added {new Date(item.addedAt).toLocaleDateString('en-CA')}
 							</span>
 						</div>
 					</div>

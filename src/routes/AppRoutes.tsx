@@ -1,19 +1,19 @@
 import { Routes, Route, Navigate } from 'react-router-dom'
 import { PrivateRoute } from './PrivateRoute'
+import { PublicRoute } from './PublicRoute'
 
 // Auth Pages
-import LoginPage from '@/pages/auth/Login/LoginPage'
-import RegisterPage from '@/pages/auth/Register/RegisterPage'
 import ForgotPasswordPage from '@/pages/auth/ForgotPassword/ForgotPasswordPage'
-import VerifyOTPPage from '@/pages/auth/VerifyOTP/VerifyOTPPage'
+import ResetPasswordPage from '@/pages/auth/ResetPassword/ResetPasswordPage'
 
 // User Pages
+import LandingPage from '@/pages/user/Landing/LandingPage'
 import HomePage from '@/pages/user/Home/HomePage'
 import BooksPage from '@/pages/user/Books/BooksPage'
 import BookDetail from '@/pages/user/Books/BookDetail'
 import BookReader from '@/pages/user/Books/BookReader'
-import MoviesPage from '@/pages/user/Movies/MoviesPage'
-import MovieDetail from '@/pages/user/Movies/MovieDetail'
+
+import MovieDetailPage from '@/pages/user/Movies/MovieDetailPage'
 import MovieWatch from '@/pages/user/Movies/MovieWatch'
 import ProfilePage from '@/pages/user/Profile/ProfilePage'
 import ReadHistory from '@/pages/user/Profile/ReadHistory'
@@ -36,19 +36,27 @@ import ReportsPage from '@/pages/admin/Reports/ReportsPage'
 export const AppRoutes = () => {
 	return (
 		<Routes>
-			{/* Public Routes */}
-			<Route path="/" element={<HomePage />} />
+			{/* Landing page - Accessible to everyone */}
+			<Route path="/" element={<LandingPage />} />
 
-			{/* Auth Routes */}
-			<Route path="/auth">
-				<Route path="login" element={<LoginPage />} />
-				<Route path="register" element={<RegisterPage />} />
-				<Route path="forgot-password" element={<ForgotPasswordPage />} />
-				<Route path="verify-otp" element={<VerifyOTPPage />} />
+			{/* Movie Detail - Accessible to everyone (guest can view details but need to login to watch) */}
+			<Route path="/movies/:id" element={<MovieDetailPage />} />
+
+			{/* Public Routes - Only for non-authenticated users, redirect to /home if logged in */}
+			<Route element={<PublicRoute />}>
+				{/* Auth Routes - Removed login/register routes, now using modals only */}
+				<Route path="/auth">
+					<Route path="forgot-password" element={<ForgotPasswordPage />} />
+				</Route>
 			</Route>
+
+			{/* Reset Password - Always accessible (không bị redirect) */}
+			<Route path="/auth/reset-password" element={<ResetPasswordPage />} />
 
 			{/* User Routes - Protected */}
 			<Route element={<PrivateRoute />}>
+				<Route path="/home" element={<HomePage />} />
+
 				<Route path="/books">
 					<Route index element={<BooksPage />} />
 					<Route path=":id" element={<BookDetail />} />
@@ -56,8 +64,6 @@ export const AppRoutes = () => {
 				</Route>
 
 				<Route path="/movies">
-					<Route index element={<MoviesPage />} />
-					<Route path=":id" element={<MovieDetail />} />
 					<Route path=":id/watch" element={<MovieWatch />} />
 				</Route>
 

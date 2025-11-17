@@ -1,0 +1,121 @@
+/* Comment Section Card */
+.comment-section {
+	width: 100%;
+	background: linear-gradient(135deg, #010101 0%, #1a1a1a 100%);
+	background: #0000003b;
+	border-radius: 8px;
+	max-width: 1300px;
+	margin: 0 auto;
+	margin-bottom: 30px;
+	position: relative;
+	overflow: hidden;
+	border: 1px solid rgba(255, 255, 255, 0.1);
+	box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3), 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Header */
+.comment-section__header {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	padding: 24px 28px;
+	border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+	gap: 20px;
+}
+
+.comment-section__title-wrapper {
+	display: flex;
+	align-items: center;
+	gap: 12px;
+}
+
+.comment-section__title {
+	font-size: 20px;
+	font-weight: 700;
+	color: #ff6b35;
+	margin: 0;
+}
+
+/* Sort */
+.comment-section__sort {
+	display: flex;
+	align-items: center;
+	gap: 12px;
+}
+
+.comment-section__sort-label {
+	font-size: 14px;
+	font-weight: 500;
+	color: #888;
+	white-space: nowrap;
+}
+
+.comment-section__sort-select {
+	padding: 8px 12px;
+	font-size: 14px;
+	font-family: inherit;
+	color: #fff;
+	background: rgba(255, 255, 255, 0.05);
+	border: 1px solid rgba(255, 255, 255, 0.1);
+	border-radius: 8px;
+	cursor: pointer;
+	transition: all 0.3s ease;
+	outline: none;
+}
+
+.comment-section__sort-select:hover {
+	border-color: rgba(255, 255, 255, 0.2);
+	background: rgba(255, 255, 255, 0.08);
+}
+
+.comment-section__sort-select:focus {
+	border-color: #ff6b35;
+	box-shadow: 0 0 0 3px rgba(255, 107, 53, 0.1);
+}
+
+.comment-section__sort-select option {
+	background: #1a1a1a;
+	color: #fff;
+}
+
+/* Form Section */
+.comment-section__form {
+	padding: 0 28px;
+}
+
+/* List Section */
+.comment-section__list {
+	padding: 20px 28px 28px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+	.comment-section__header {
+		flex-direction: column;
+		align-items: flex-start;
+		padding: 20px;
+		gap: 16px;
+	}
+
+	.comment-section__title {
+		font-size: 18px;
+	}
+
+	.comment-section__sort {
+		width: 100%;
+		justify-content: space-between;
+	}
+
+	.comment-section__sort-select {
+		flex: 1;
+		max-width: 150px;
+	}
+
+	.comment-section__form {
+		padding: 0 20px;
+	}
+
+	.comment-section__list {
+		padding: 16px 20px 20px;
+	}
+}

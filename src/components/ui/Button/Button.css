@@ -1,0 +1,138 @@
+/* Button Base Styles */
+.ui-button {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	gap: 8px;
+	font-family: inherit;
+	font-weight: 600;
+	border: none;
+	border-radius: 8px;
+	cursor: pointer;
+	transition: all 0.3s ease;
+	position: relative;
+	overflow: hidden;
+}
+
+.ui-button:focus {
+	outline: none;
+	box-shadow: 0 0 0 3px rgba(255, 107, 53, 0.3);
+}
+
+/* Sizes */
+.ui-button--small {
+	padding: 6px 12px;
+	font-size: 13px;
+	min-height: 32px;
+}
+
+.ui-button--medium {
+	padding: 10px 20px;
+	font-size: 14px;
+	min-height: 40px;
+}
+
+.ui-button--large {
+	padding: 14px 28px;
+	font-size: 16px;
+	min-height: 48px;
+}
+
+/* Variants */
+.ui-button--primary {
+	background: #ff6b35;
+	color: white;
+}
+
+.ui-button--primary:hover:not(:disabled) {
+	background: #ff8555;
+	transform: translateY(-2px);
+	box-shadow: 0 4px 12px rgba(255, 107, 53, 0.4);
+}
+
+.ui-button--primary:active:not(:disabled) {
+	transform: translateY(0);
+}
+
+.ui-button--secondary {
+	background: rgba(255, 255, 255, 0.1);
+	color: white;
+	border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.ui-button--secondary:hover:not(:disabled) {
+	background: rgba(255, 255, 255, 0.15);
+	border-color: rgba(255, 255, 255, 0.3);
+}
+
+.ui-button--ghost {
+	background: transparent;
+	color: #fff;
+}
+
+.ui-button--ghost:hover:not(:disabled) {
+	background: rgba(255, 255, 255, 0.1);
+}
+
+.ui-button--danger {
+	background: #ff4444;
+	color: white;
+}
+
+.ui-button--danger:hover:not(:disabled) {
+	background: #ff6666;
+	transform: translateY(-2px);
+	box-shadow: 0 4px 12px rgba(255, 68, 68, 0.4);
+}
+
+/* States */
+.ui-button--disabled,
+.ui-button:disabled {
+	opacity: 0.5;
+	cursor: not-allowed;
+	transform: none !important;
+}
+
+.ui-button--loading {
+	pointer-events: none;
+}
+
+.ui-button--full-width {
+	width: 100%;
+}
+
+/* Icon */
+.ui-button__icon {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.ui-button__icon svg {
+	width: 18px;
+	height: 18px;
+}
+
+.ui-button--small .ui-button__icon svg {
+	width: 16px;
+	height: 16px;
+}
+
+.ui-button--large .ui-button__icon svg {
+	width: 20px;
+	height: 20px;
+}
+
+/* Loading Spinner */
+.ui-button__spinner {
+	width: 16px;
+	height: 16px;
+	border: 2px solid rgba(255, 255, 255, 0.3);
+	border-top-color: white;
+	border-radius: 50%;
+	animation: spin 0.6s linear infinite;
+}
+
+@keyframes spin {
+	to { transform: rotate(360deg); }
+}

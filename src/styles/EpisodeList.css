@@ -1,0 +1,71 @@
+/* Episode List */
+.episode-list-section {
+    margin-top: 32px;
+}
+
+.episode-list-title {
+    color: #ff6b35;
+    font-size: 18px;
+    font-weight: 700;
+    margin-bottom: 16px;
+}
+
+.episode-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: 12px;
+}
+
+.episode-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    padding: 12px;
+    background: #2a2a2a;
+    border: 2px solid transparent;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.episode-item:hover {
+    background: #3a3a3a;
+    border-color: #ff6b35;
+}
+
+.episode-item.active {
+    background: #ff6b35;
+    border-color: #ff6b35;
+}
+
+.episode-number {
+    color: #e0e0e0;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.episode-item.active .episode-number {
+    color: white;
+}
+
+.episode-duration {
+    color: #999;
+    font-size: 12px;
+}
+
+.episode-item.active .episode-duration {
+    color: rgba(255, 255, 255, 0.8);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .episode-list {
+        grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+        gap: 8px;
+    }
+
+    .episode-item {
+        padding: 10px;
+    }
+}

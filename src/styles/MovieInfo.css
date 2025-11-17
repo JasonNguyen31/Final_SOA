@@ -1,0 +1,244 @@
+/* Movie Info Section */
+.movie-info-section {
+    background: #000000;
+    padding-bottom: 30px;
+    border-bottom-left-radius: 60px;
+    border-bottom-right-radius: 60px;
+    margin-bottom: 30px;
+}
+
+.movie-info-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 70px;
+}
+
+.movie-info-main {
+    background: #00000085;
+    border-radius: 8px;
+}
+
+/* Rating */
+.rating-section {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 20px;
+}
+
+.stars-container {
+    display: flex;
+    gap: 4px;
+}
+
+.star-icon {
+    width: 15px;
+    height: 20px;
+    transition: filter 0.3s ease;
+}
+
+.star-icon.filled {
+    color: #fbbf24;
+}
+
+.star-icon.empty {
+    color: #ffffffa0;
+}
+
+.rating-text {
+    color: #999;
+    font-size: 14px;
+}
+
+/* Movie Details */
+.movie-details {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    margin-bottom: 40px;
+}
+
+.detail-row {
+    display: flex;
+    gap: 12px;
+}
+
+.detail-label {
+    color: #ffffff;
+    font-size: 15px;
+    font-weight: 600;
+    min-width: 180px;
+}
+
+.detail-value {
+    color: #fefefe;
+    font-size: 15px;
+    flex: 1;
+    font-weight: 600;
+}
+
+.detail-value.quality {
+    color: #ff5121;
+}
+
+.detail-value.year {
+    color: #ff6b35;
+}
+
+.detail-value.imdb {
+    color: #ff6b35;
+    font-weight: 600;
+}
+
+.detail-value.tomato {
+    color: #ff6b35;
+}
+
+.detail-value.premium-badge {
+    background: linear-gradient(135deg, #ff9500 0%, #ff924e 100%);
+    padding: 6px 14px;
+    margin-right: 10px;
+    border-radius: 3px;
+    font-size: 13px;
+    font-weight: 700;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    box-shadow: 0 0 20px rgba(255, 149, 0, 0.8), 0 0 10px rgba(255, 149, 0, 0.5), 0 2px 3px rgba(255, 215, 0, 0.4);
+    color: #000 !important;
+    -webkit-text-fill-color: #000 !important;
+}
+
+.detail-value.premium-badge svg {
+    color: #000 !important;
+}
+
+
+.genre-link,
+.actor-link {
+    color: #ff8000e0;
+    text-decoration: none;
+    margin-right: 8px;
+}
+
+.genre-link:hover,
+.actor-link:hover {
+    text-decoration: underline;
+}
+
+.actor-link::after {
+    content: ', ';
+    color: #e0e0e0;
+}
+
+.actor-link:last-child::after {
+    content: '';
+}
+
+/* Description */
+.movie-description {
+    margin-bottom: 32px;
+}
+
+.description-title {
+    color: #ff6b35;
+    font-size: 20px;
+    font-weight: 700;
+    margin-bottom: 16px;
+}
+
+.description-text {
+    color: #e0e0e0;
+    font-size: 15px;
+    line-height: 1.8;
+    white-space: pre-line;
+}
+
+/* Tags */
+.tags-title {
+    color: #ff6b35;
+    font-size: 18px;
+    font-weight: 700;
+    margin-bottom: 16px;
+}
+
+.tags-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+.tag-item {
+    background: #3b3b3b77;
+    color: #e0e0e0;
+    padding: 8px 16px;
+    border-radius: 4px;
+    font-size: 13px;
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+.tag-item:hover {
+    background: #ff75437f;
+    color: white;
+    transform: translateY(-2px);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .movie-info-main {
+        padding: 24px;
+    }
+
+    .detail-row {
+        flex-direction: column;
+        gap: 4px;
+    }
+
+    .detail-label {
+        min-width: auto;
+    }
+}
+/* Action Buttons */
+.action-buttons {
+    display: flex;
+    gap: 12px;
+    margin: 20px 0;
+}
+
+.btn-add-to-collection {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 24px;
+    background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+    border: none;
+    border-radius: 8px;
+    color: white;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+}
+
+.btn-add-to-collection:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(59, 130, 246, 0.4);
+    background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+}
+
+.btn-add-to-collection:active {
+    transform: translateY(0);
+}
+
+@media (max-width: 768px) {
+    .action-buttons {
+        flex-direction: column;
+    }
+
+    .btn-add-to-collection {
+        width: 100%;
+        justify-content: center;
+    }
+}

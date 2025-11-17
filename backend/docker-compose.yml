@@ -1,0 +1,129 @@
+services:
+  mongo:
+    image: mongo:8
+    container_name: mongo
+    restart: always
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.runCommand({ping: 1})"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+  redis:
+    image: redis:7
+    container_name: redis
+    restart: always
+    ports:
+      - "6379:6379"
+    command: redis-server --save 60 1 --loglevel warning
+    volumes:
+      - redis_data:/data
+  auth_service:
+    build:
+      context: ./auth_service        
+      dockerfile: Dockerfile
+    container_name: auth_service
+    restart: always
+    ports:
+      - "8001:8001"
+    depends_on:
+      mongo:
+        condition: service_healthy
+    env_file:
+      - ./auth_service/.env  # Loads ./auth_service/.env at runtime
+    environment:  # Fallbacks (override if .env missing)
+      - MONGO_URI=mongodb://host.docker.internal:27017/ONLINE_ENTERTAINMENT_PLATFORM
+      - SERVICE_NAME=auth_service
+      - PORT=8001
+      - DATABASE_NAME=ONLINE_ENTERTAINMENT_PLATFORM
+      - REDIS_URL=redis://redis:6379
+  user_service:
+    build:
+      context: ./user_service
+      dockerfile: Dockerfile
+    container_name: user_service
+    restart: always
+    ports:
+      - "8002:8002"
+    depends_on:
+      mongo:
+        condition: service_healthy
+    env_file:
+      - ./user_service/.env
+    environment:  # Fallbacks (override if .env missing)
+      - MONGO_URI=mongodb://host.docker.internal:27017/ONLINE_ENTERTAINMENT_PLATFORM
+      - SERVICE_NAME=user_service
+      - PORT=8002
+      - DATABASE_NAME=ONLINE_ENTERTAINMENT_PLATFORM
+      - REDIS_URL=redis://redis:6379
+
+
+
+  movie_service:
+    build:
+      context: ./movie_service
+      dockerfile: Dockerfile
+    container_name: movie_service
+    restart: always
+    ports:
+      - "8003:8003"
+    depends_on:
+      mongo:
+        condition: service_healthy
+    env_file:
+      - ./movie_service/.env
+    environment:  # Fallbacks (override if .env missing)
+      - MONGO_URI=mongodb://host.docker.internal:27017
+      - SERVICE_NAME=movie_service
+      - PORT=8003
+      - DATABASE_NAME=ONLINE_ENTERTAINMENT_PLATFORM
+      - REDIS_URL=redis://redis:6379
+
+
+
+  book_service:
+    build:
+      context: ./book_service
+      dockerfile: Dockerfile
+    container_name: book_service
+    restart: always
+    ports:
+      - "8004:8004"
+    depends_on:
+      mongo:
+        condition: service_healthy
+    env_file:
+      - ./book_service/.env
+    environment:  # Fallbacks (override if .env missing)
+      - MONGO_URI=mongodb://host.docker.internal:27017/ONLINE_ENTERTAINMENT_PLATFORM
+      - SERVICE_NAME=book_service
+      - PORT=8004
+      - DATABASE_NAME=ONLINE_ENTERTAINMENT_PLATFORM
+      - REDIS_URL=redis://redis:6379
+
+  collection_service:
+    build:
+      context: ./collection_service
+      dockerfile: Dockerfile
+    container_name: collection_service
+    restart: always
+    ports:
+      - "8005:8005"
+    depends_on:
+      mongo:
+        condition: service_healthy
+    env_file:
+      - ./collection_service/.env
+    environment:  # Fallbacks (override if .env missing)
+      - MONGO_URI=mongodb://host.docker.internal:27017/ONLINE_ENTERTAINMENT_PLATFORM
+      - SERVICE_NAME=collection_service
+      - PORT=8005
+      - DATABASE_NAME=ONLINE_ENTERTAINMENT_PLATFORM
+
+volumes:
+  mongo_data:
+  redis_data:

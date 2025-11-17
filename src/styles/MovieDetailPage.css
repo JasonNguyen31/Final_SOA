@@ -1,0 +1,92 @@
+.movie-detail-page {
+    position: relative;
+    min-height: 100vh;
+}
+
+.movie-detail-page::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: url('../assets/images/xza.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    opacity: 0.15;
+    z-index: 0;
+    pointer-events: none;
+}
+
+.movie-detail-page>* {
+    position: relative;
+    z-index: 1;
+}
+
+/* Loading State */
+.movie-detail-page.loading {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 80vh;
+}
+
+.loading-spinner {
+    text-align: center;
+    color: #fff;
+    font-size: 1.2rem;
+    padding: 2rem;
+    animation: pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes pulse {
+
+    0%,
+    100% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0.5;
+    }
+}
+
+/* Error State */
+.movie-detail-page.error {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 80vh;
+}
+
+.error-message {
+    text-align: center;
+    color: #fff;
+    padding: 2rem;
+    max-width: 500px;
+}
+
+.error-message h2 {
+    color: #ff4444;
+    margin-bottom: 1.5rem;
+    font-size: 1.5rem;
+}
+
+.error-message button {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: none;
+    padding: 0.75rem 2rem;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.error-message button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px rgba(102, 126, 234, 0.4);
+}

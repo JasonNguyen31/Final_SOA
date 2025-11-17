@@ -1,0 +1,72 @@
+/* Spinner Container */
+.ui-spinner {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+}
+
+/* Spinner Circle */
+.ui-spinner__circle {
+	border-radius: 50%;
+	border-style: solid;
+	animation: spin 0.8s linear infinite;
+}
+
+/* Sizes */
+.ui-spinner--small .ui-spinner__circle {
+	width: 16px;
+	height: 16px;
+	border-width: 2px;
+}
+
+.ui-spinner--medium .ui-spinner__circle {
+	width: 24px;
+	height: 24px;
+	border-width: 3px;
+}
+
+.ui-spinner--large .ui-spinner__circle {
+	width: 40px;
+	height: 40px;
+	border-width: 4px;
+}
+
+/* Colors */
+.ui-spinner--primary .ui-spinner__circle {
+	border-color: rgba(255, 107, 53, 0.2);
+	border-top-color: #ff6b35;
+}
+
+.ui-spinner--white .ui-spinner__circle {
+	border-color: rgba(255, 255, 255, 0.2);
+	border-top-color: #fff;
+}
+
+.ui-spinner--inherit .ui-spinner__circle {
+	border-color: currentColor;
+	opacity: 0.2;
+}
+
+.ui-spinner--inherit .ui-spinner__circle::before {
+	content: '';
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	border: inherit;
+	border-color: transparent;
+	border-top-color: currentColor;
+	border-radius: 50%;
+	opacity: 1;
+}
+
+/* Animation */
+@keyframes spin {
+	0% {
+		transform: rotate(0deg);
+	}
+	100% {
+		transform: rotate(360deg);
+	}
+}

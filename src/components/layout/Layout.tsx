@@ -1,7 +1,6 @@
 import { type ReactNode } from 'react'
-import Header from './Header'
-import Footer from './Footer'
-import { usePageTitle } from '@/hooks/usePageTitle'
+import Header from './Header/Header'
+import Footer from './Footer/Footer'
 import '@/styles/Layout.css'
 
 interface LayoutProps {
@@ -11,8 +10,6 @@ interface LayoutProps {
 }
 
 export const Layout = ({ children, showHeader = true, showFooter = true }: LayoutProps) => {
-	usePageTitle()
-
 	return (
 		<div className="app-layout">
 			{showHeader && <Header />}

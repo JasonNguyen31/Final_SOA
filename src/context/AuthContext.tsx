@@ -6,7 +6,7 @@ interface AuthContextType {
 	token: string | null
 	isAuthenticated: boolean
 	isLoading: boolean
-	login: (token: string, user: User) => void
+	login: (token: string, user: User, rememberMe?: boolean) => void
 	logout: () => void
 	updateUser: (user: User) => void
 }
@@ -30,30 +30,46 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 	const [token, setToken] = useState<string | null>(null)
 	const [isLoading, setIsLoading] = useState(true)
 
-	// Load auth state from localStorage on mount
+	// Load auth state from localStorage or sessionStorage on mount
 	useEffect(() => {
-		const storedToken = localStorage.getItem('auth_token')
-		const storedUser = localStorage.getItem('user')
+		// Try localStorage first (Remember Me = true)
+		let storedToken = localStorage.getItem('auth_token')
+		let storedUser = localStorage.getItem('user')
+		let storage: Storage = localStorage
+
+		// If not in localStorage, try sessionStorage (Remember Me = false)
+		if (!storedToken) {
+			storedToken = sessionStorage.getItem('auth_token')
+			storedUser = sessionStorage.getItem('user')
+			storage = sessionStorage
+		}
 
 		if (storedToken && storedUser) {
 			try {
+				const parsedUser = JSON.parse(storedUser)
 				setToken(storedToken)
-				setUser(JSON.parse(storedUser))
+				setUser(parsedUser)
 			} catch (error) {
 				console.error('Failed to parse user data:', error)
-				localStorage.removeItem('auth_token')
-				localStorage.removeItem('user')
+				storage.removeItem('auth_token')
+				storage.removeItem('user')
 			}
 		}
 
 		setIsLoading(false)
 	}, [])
 
-	const login = (newToken: string, newUser: User) => {
+	const login = (newToken: string, newUser: User, rememberMe: boolean = false) => {
 		setToken(newToken)
 		setUser(newUser)
-		localStorage.setItem('auth_token', newToken)
-		localStorage.setItem('user', JSON.stringify(newUser))
+
+		// Store based on Remember Me preference
+		const storage = rememberMe ? localStorage : sessionStorage
+		storage.setItem('auth_token', newToken)
+		storage.setItem('user', JSON.stringify(newUser))
+
+		// Also store the remember me preference
+		localStorage.setItem('remember_me', rememberMe.toString())
 	}
 
 	const logout = () => {
@@ -61,11 +77,20 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 		setUser(null)
 		localStorage.removeItem('auth_token')
 		localStorage.removeItem('user')
+		// Also clear any other auth-related data
+		localStorage.removeItem('refresh_token')
+		localStorage.removeItem('remember_me')
+		// Clear session storage as well
+		sessionStorage.clear()
 	}
 
 	const updateUser = (updatedUser: User) => {
 		setUser(updatedUser)
-		localStorage.setItem('user', JSON.stringify(updatedUser))
+
+		// Update in the same storage that was used during login
+		const rememberMe = localStorage.getItem('remember_me') === 'true'
+		const storage = rememberMe ? localStorage : sessionStorage
+		storage.setItem('user', JSON.stringify(updatedUser))
 	}
 
 	const value: AuthContextType = {

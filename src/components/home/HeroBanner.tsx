@@ -1,67 +1,80 @@
 import { Heart, Plus, ChevronLeft, ChevronRight } from 'lucide-react'
+import { Link } from 'react-router-dom'
 import { useState, useEffect } from 'react'
 import '@/styles/HeroBanner.css'
-import demonslayerBg from '@/assets/images/demonslayer.jpg'
-import jutsukaizenBg from '@/assets/images/jutsukaizen.jpg'
-import bokunoheroBg from '@/assets/images/aot.jpg'
+import { movieService } from '@/services/content/movieService'
+import type { Movie } from '@/services/content/movieService'
+
+interface FeaturedMovie extends Movie {
+	backgroundImage?: string
+	tags?: string
+	subtitle?: string
+	longDescription?: string
+}
 
 export const HeroBanner = () => {
 	const [currentSlide, setCurrentSlide] = useState(0)
 	const [isAnimating] = useState(false)
-	// const [isAnimating, setIsAnimating] = useState(false)
-	const featuredAnime = [
-		{
-			id: 1,
-			title: 'DEMON SLAYER',
-			subtitle: 'SEASON 4',
-			description: 'NOW STREAMING',
-			longDescription: 'Tanjiro and his friends embark on a new mission in the Swordsmith Village. Face the Upper Rank demons in the most intense battle yet!',
-			backgroundImage: demonslayerBg,
-			tags: 'ACTION, ADVENTURE, SUPERNATURAL'
-		},
-		{
-			id: 2,
-			title: 'JUJUTSU KAISEN',
-			subtitle: 'SHIBUYA ARC',
-			description: 'NEW EPISODES',
-			longDescription: 'The Shibuya Incident reaches its climax as Yuji and the sorcerers face their greatest challenge. The fate of humanity hangs in the balance!',
-			backgroundImage: jutsukaizenBg,
-			tags: 'ACTION, DARK FANTASY, SUPERNATURAL'
-		},
-		{
-			id: 3,
-			title: 'BOKU NO HERO',
-			subtitle: 'SEASON 3',
-			description: 'NEW EPISODES',
-			longDescription: 'Deku and his friends in the academy fight against superpowered criminals to protect the world!',
-			backgroundImage: bokunoheroBg,
-			tags: 'ACTION, ACADEMY, HERO, SUPERNATURAL'
-		}
-	]
+	const [featuredMovies, setFeaturedMovies] = useState<FeaturedMovie[]>([])
+	const [loading, setLoading] = useState(true)
 
-	// Preload tất cả ảnh khi component mount
+	// Fetch featured movies from API
 	useEffect(() => {
-		featuredAnime.forEach((anime) => {
-			const img = new Image()
-			img.src = anime.backgroundImage
-		})
+		const fetchFeatured = async () => {
+			try {
+				setLoading(true)
+				// Fetch latest/hottest movies sorted by release year (newest first)
+				const response = await movieService.getMovies({
+					sortBy: 'releaseYear',
+					order: 'desc',
+					limit: 5,
+					page: 1
+				})
+				const transformedMovies = response.movies.map((movie) => ({
+					...movie,
+					backgroundImage: movie.bannerUrl || movie.thumbnailUrl,
+					tags: movie.genres?.join(', ').toUpperCase() || 'MOVIE',
+					subtitle: movie.releaseYear?.toString() || '',
+					longDescription: movie.description || 'Watch now on our platform!'
+				}))
+				setFeaturedMovies(transformedMovies)
+			} catch (error) {
+				console.error('Error fetching featured movies:', error)
+			} finally {
+				setLoading(false)
+			}
+		}
+		fetchFeatured()
 	}, [])
 
-	// Auto slide mỗi 5 giây
+	// Preload images
 	useEffect(() => {
+		if (featuredMovies.length > 0) {
+			featuredMovies.forEach((movie) => {
+				const img = new Image()
+				img.src = movie.backgroundImage || ''
+			})
+		}
+	}, [featuredMovies])
+
+	// Auto slide every 10 seconds
+	useEffect(() => {
+		if (featuredMovies.length === 0) return
 		const interval = setInterval(() => {
-			setCurrentSlide((prev) => (prev + 1) % featuredAnime.length)
+			setCurrentSlide((prev) => (prev + 1) % featuredMovies.length)
 		}, 10000)
 
 		return () => clearInterval(interval)
-	}, [featuredAnime.length])
+	}, [featuredMovies.length])
 
 	const nextSlide = () => {
-		setCurrentSlide((prev) => (prev + 1) % featuredAnime.length)
+		if (featuredMovies.length === 0) return
+		setCurrentSlide((prev) => (prev + 1) % featuredMovies.length)
 	}
 
 	const prevSlide = () => {
-		setCurrentSlide((prev) => (prev - 1 + featuredAnime.length) % featuredAnime.length)
+		if (featuredMovies.length === 0) return
+		setCurrentSlide((prev) => (prev - 1 + featuredMovies.length) % featuredMovies.length)
 	}
 
 	// const handleSlideChange = (newIndex: number) => {
@@ -70,16 +83,33 @@ export const HeroBanner = () => {
 	// 	setTimeout(() => setIsAnimating(false), 800)
 	// }
 
-	const current = featuredAnime[currentSlide]
+	if (loading) {
+		return (
+			<section className="hero-banner">
+				<div className="hero-overlay"></div>
+				<div className="hero-container">
+					<div className="hero-content">
+						<div className="hero-left">Loading featured content...</div>
+					</div>
+				</div>
+			</section>
+		)
+	}
+
+	if (featuredMovies.length === 0) {
+		return null
+	}
+
+	const current = featuredMovies[currentSlide]
 
 	return (
 		<section className="hero-banner">
 			{/* Background Images - All layers */}
-			{featuredAnime.map((anime, index) => (
+			{featuredMovies.map((movie, index) => (
 				<div
-					key={anime.id}
+					key={movie.id}
 					className={`hero-background ${index === currentSlide ? 'active' : ''}`}
-					style={{ backgroundImage: `url(${anime.backgroundImage})` }}
+					style={{ backgroundImage: `url(${movie.backgroundImage})` }}
 				/>
 			))}
 
@@ -105,7 +135,7 @@ export const HeroBanner = () => {
 								{current.subtitle}
 							</div>
 							<div className="hero-description">
-								{current.description}
+								NOW STREAMING
 							</div>
 						</div>
 
@@ -114,9 +144,9 @@ export const HeroBanner = () => {
 						</p>
 
 						<div className="hero-actions">
-							<button className="btn-primary">
+							<Link to={`/movies/${current.id}`} className="btn-primary">
 								<span>Watch Now</span>
-							</button>
+							</Link>
 
 							<button className="btn-icon-group">
 								<div className="btn-icon">
@@ -145,7 +175,7 @@ export const HeroBanner = () => {
 
 							{/* Slide Indicators */}
 							<div className="slide-indicators">
-								{featuredAnime.map((_, index) => (
+								{featuredMovies.map((_, index) => (
 									<button
 										key={index}
 										className={`indicator ${index === currentSlide ? 'active' : ''}`}

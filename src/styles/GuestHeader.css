@@ -1,0 +1,300 @@
+/* Header Styles */
+.guest-header {
+    background: linear-gradient(135deg, #2a2a2a 0%, #1a1a1a 100%);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    overflow: visible;
+}
+
+.guest-header-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    border-bottom: 1px solid black;
+    overflow: visible;
+}
+
+.guest-header-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 80px;
+}
+
+.guest-header-left {
+    display: flex;
+    align-items: center;
+}
+
+/* Logo Wrapper with Background */
+.guest-logo-wrapper {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    padding: 16px 85px;
+}
+
+/* Logo */
+.guest-logo {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    cursor: pointer;
+    position: relative;
+    z-index: 2;
+}
+
+.guest-logo-text-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.guest-logo-main {
+    display: flex;
+    align-items: center;
+}
+
+.guest-logo-text {
+    color: #ffffff;
+    font-size: 20px;
+    font-weight: 700;
+    letter-spacing: 1px;
+}
+
+.guest-logo-network {
+    color: #ff6b35;
+    font-size: 20px;
+    font-weight: 700;
+    letter-spacing: 1px;
+}
+
+.guest-logo-japanese {
+    color: #999;
+    font-size: 10px;
+    letter-spacing: 2px;
+}
+
+/* Logo Background Image Area */
+.guest-logo-background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 1;
+    opacity: 0.15;
+    pointer-events: none;
+    overflow: hidden;
+}
+
+.guest-logo-background img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+}
+
+/* Navigation */
+.guest-main-nav {
+    display: flex !important;
+    align-items: center;
+    gap: 18px;
+}
+
+.guest-nav-link {
+    color: #e0e0e0;
+    font-size: 14px;
+    font-weight: 500;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    padding: 8px 12px;
+    border: none;
+    background: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    position: relative;
+}
+
+.guest-nav-link.active {
+    color: #ff6b35;
+    border-bottom: 1px solid #ff6b35;
+}
+
+.guest-nav-link.active:hover {
+    color: #ff6b35;
+}
+
+.guest-nav-link:hover,
+.guest-nav-link.hovered {
+    color: #ff6b35;
+}
+
+.guest-nav-link strong {
+    transition: color 0.2s ease;
+}
+
+.guest-nav-link:hover strong,
+.guest-nav-link.hovered strong {
+    color: #ff6b35;
+}
+
+.guest-nav-icon {
+    width: 16px;
+    height: 16px;
+    transition: all 0.2s ease;
+}
+
+.guest-nav-link:hover .nav-icon,
+.guest-nav-link.hovered .nav-icon {
+    transform: rotate(180deg);
+    color: #ff6b35;
+}
+
+.guest-nav-dropdown {
+    position: relative;
+}
+
+.guest-dropdown-menu {
+    position: absolute;
+    top: 100%;
+    left: 10%;
+    margin-top: 3px;
+    background: rgba(0, 0, 0, 0.6);
+    border-radius: 6px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+    min-width: 130px;
+    overflow: hidden;
+    backdrop-filter: blur(5px);
+}
+
+.guest-dropdown-item {
+    display: block;
+    padding: 12px 20px;
+    color: #e0e0e0;
+    font-size: 14px;
+    text-decoration: none;
+    transition: all 0.2s ease;
+    border-radius: 6px;
+}
+
+.guest-dropdown-item:hover {
+    background: rgba(255, 107, 53, 0.15);
+    color: #ff6b35;
+    padding-left: 24px;
+}
+
+/* Header Right */
+.guest-header-right {
+    display: flex !important;
+    align-items: center;
+    gap: 22px;
+}
+
+.guest-search-box {
+    display: flex;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.08);
+    border-radius: 5px;
+    padding: 8px 12px;
+    gap: 8px;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    margin: 0 0 0 0;
+}
+
+.guest-search-input {
+    background: transparent;
+    border: none;
+    outline: none;
+    color: #e0e0e0;
+    font-size: 14px;
+    width: 250px;
+}
+
+.guest-search-input::placeholder {
+    color: #888;
+}
+
+.guest-search-icon {
+    width: 18px;
+    height: 18px;
+    color: #888;
+}
+
+.guest-auth-buttons {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    padding-left: 5px;
+    padding-right: 25px;
+}
+
+.guest-btn-login {
+    padding: 10px 40px;
+    font-size: 14px;
+    font-weight: 600;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.guest-btn-register {
+    padding: 10px 30px;
+    font-size: 14px;
+    font-weight: 600;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.guest-btn-login {
+    background: transparent;
+    box-shadow: 0 4px 12px rgba(114, 49, 25, 0.2);
+    border: 1px solid rgba(255, 107, 53, 0.7);
+    color: rgba(255, 107, 53);
+}
+
+.guest-btn-login:hover {
+    color: #ffffff;
+    border-color: #ffffff;
+    background: rgba(255, 255, 255, 0.181);
+}
+
+.guest-btn-register {
+    background: rgba(255, 107, 53, 0.5);
+    box-shadow: 0 4px 12px rgba(255, 107, 53, 0.2);
+    color: #ffffff;
+    border: none;
+}
+
+.guest-btn-register:hover {
+    background: #ff5722;
+    border-color: #ff5722;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .auth-buttons {
+        padding-right: 10px;
+    }
+
+    .btn-login,
+    .btn-register {
+        padding: 8px 16px;
+        font-size: 13px;
+    }
+
+    .guest-main-nav {
+        display: none;
+    }
+
+    .guest-search-box {
+        display: none;
+    }
+
+    .logo-japanese {
+        display: none;
+    }
+}

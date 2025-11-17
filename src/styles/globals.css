@@ -6,6 +6,8 @@
 
 html {
 	scroll-behavior: smooth;
+	overflow-x: hidden;
+	max-width: 100%;
 }
 
 body {
@@ -17,6 +19,8 @@ body {
 	background: #1a1a1a;
 	color: #1a1a1a;
 	min-height: 100vh;
+	overflow-x: hidden;
+	max-width: 100%;
 }
 
 code {

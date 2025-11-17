@@ -1,0 +1,138 @@
+/* Comment Item */
+.comment-item {
+	display: flex;
+	gap: 16px;
+	padding: 20px 0;
+	border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.comment-item:last-child {
+	border-bottom: none;
+}
+
+.comment-item__avatar {
+	flex-shrink: 0;
+}
+
+/* Content */
+.comment-item__content {
+	flex: 1;
+	display: flex;
+	flex-direction: column;
+	gap: 12px;
+	min-width: 0;
+}
+
+/* Header */
+.comment-item__header {
+	display: flex;
+	align-items: flex-start;
+	justify-content: space-between;
+	gap: 12px;
+}
+
+.comment-item__author-info {
+	display: flex;
+	flex-direction: column;
+	gap: 4px;
+}
+
+.comment-item__author {
+	font-size: 14px;
+	font-weight: 600;
+	color: #fff;
+}
+
+.comment-item__timestamp {
+	font-size: 13px;
+	color: #888;
+}
+
+.comment-item__delete-btn {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 32px;
+	height: 32px;
+	padding: 0;
+	background: rgba(255, 255, 255, 0.05);
+	border: none;
+	border-radius: 6px;
+	cursor: pointer;
+	transition: all 0.2s ease;
+	color: #888;
+	opacity: 0;
+}
+
+.comment-item__delete-btn:hover {
+	background: rgba(255, 68, 68, 0.1);
+	color: #ff4444;
+}
+
+.comment-item:hover .comment-item__delete-btn {
+	opacity: 1;
+}
+
+.comment-item__delete-icon {
+	width: 16px;
+	height: 16px;
+}
+
+/* Text */
+.comment-item__text {
+	font-size: 14px;
+	line-height: 1.6;
+	color: #e0e0e0;
+	margin: 0;
+	word-wrap: break-word;
+}
+
+/* Actions */
+.comment-item__actions {
+	display: flex;
+	gap: 16px;
+	flex-wrap: wrap;
+}
+
+.comment-item__action {
+	font-size: 13px !important;
+	padding: 6px 12px !important;
+	color: #888 !important;
+}
+
+.comment-item__action:hover {
+	color: #ff6b35 !important;
+	background: rgba(255, 107, 53, 0.1) !important;
+}
+
+.comment-item__action--liked {
+	color: #ff6b35 !important;
+}
+
+.comment-item__action--liked:hover {
+	color: #ff8555 !important;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+	.comment-item {
+		gap: 12px;
+		padding: 16px 0;
+	}
+
+	.comment-item__author {
+		font-size: 13px;
+	}
+
+	.comment-item__timestamp {
+		font-size: 12px;
+	}
+
+	.comment-item__text {
+		font-size: 13px;
+	}
+
+	.comment-item__actions {
+		gap: 12px;
+	}
+}
