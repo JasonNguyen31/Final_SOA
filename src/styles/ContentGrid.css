@@ -95,13 +95,13 @@
 .content-cards {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    row-gap: 25px;
+    row-gap: 30px;
     column-gap: 20px;
     flex: 1;
     /* Chiếm không gian còn lại */
-    align-content: start;
-    /* Cards căn trên */
-    min-height: 800px;
+    align-content: space-around;
+    /* Distribute rows evenly */
+    min-height: auto;
 }
 
 .content-card {
@@ -316,6 +316,8 @@
     top: 100px;
     /* Sticky khi scroll */
     margin-top: 0;
+    height: fit-content;
+    /* Allow sidebar to fit its content while maintaining alignment */
 }
 
 /* Sidebar Section */

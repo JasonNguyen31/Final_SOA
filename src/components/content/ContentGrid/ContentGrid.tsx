@@ -24,7 +24,7 @@ export const ContentGrid = () => {
 	const queryParams = useMemo(() => {
 		const params: any = {
 			page: currentPage,
-			limit: 16,
+			limit: 12,
 			sortBy: 'releaseYear',
 			order: 'desc'
 		}
