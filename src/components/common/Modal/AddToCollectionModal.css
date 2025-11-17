@@ -312,8 +312,14 @@
 	box-shadow: 0 2px 8px rgba(16, 185, 129, 0.3);
 }
 
+.btn-add.full {
+	background: linear-gradient(135deg, #6b7280 0%, #4b5563 100%);
+	cursor: not-allowed;
+	box-shadow: 0 2px 8px rgba(107, 114, 128, 0.3);
+}
+
 .btn-add:disabled {
-	opacity: 0.7;
+	opacity: 0.8;
 	cursor: not-allowed;
 }
 

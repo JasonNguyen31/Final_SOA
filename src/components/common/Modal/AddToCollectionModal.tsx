@@ -75,6 +75,22 @@ export const AddToCollectionModal = ({
 	}
 
 	const handleAddToCollection = async (collectionId: string) => {
+		// Find the collection to check item count
+		const collection = collections.find(c => c._id === collectionId)
+		if (!collection) {
+			showNotificationModal('error', 'Collection not found.')
+			return
+		}
+
+		// Check if collection is at maximum capacity (10 items)
+		if (collection.itemCount >= 10) {
+			showNotificationModal(
+				'warning',
+				`This collection has reached the maximum limit of 10 items. Please remove some items first.`
+			)
+			return
+		}
+
 		setAddingToCollection(collectionId)
 
 		try {
@@ -221,30 +237,40 @@ export const AddToCollectionModal = ({
 											)}
 										</div>
 
-										<button
-											className={`btn-add ${isAdded ? 'added' : ''}`}
-											onClick={() =>
-												!isAdded && !isAdding && handleAddToCollection(collection._id)
-											}
-											disabled={isAdded || isAdding}
-										>
-											{isAdding ? (
-												<>
-													<div className="button-spinner"></div>
-													<span>Adding...</span>
-												</>
-											) : isAdded ? (
-												<>
-													<Check size={18} />
-													<span>Added to {collection.name}</span>
-												</>
-											) : (
-												<>
-													<Plus size={18} />
-													<span>Add</span>
-												</>
-											)}
-										</button>
+										{(() => {
+											const isFull = collection.itemCount >= 10
+											return (
+												<button
+													className={`btn-add ${isAdded ? 'added' : ''} ${isFull ? 'full' : ''}`}
+													onClick={() =>
+														!isAdded && !isAdding && !isFull && handleAddToCollection(collection._id)
+													}
+													disabled={isAdded || isAdding || isFull}
+													title={isFull ? 'Collection is full (10 items max)' : ''}
+												>
+													{isAdding ? (
+														<>
+															<div className="button-spinner"></div>
+															<span>Adding...</span>
+														</>
+													) : isAdded ? (
+														<>
+															<Check size={18} />
+															<span>Added to {collection.name}</span>
+														</>
+													) : isFull ? (
+														<>
+															<span>Full</span>
+														</>
+													) : (
+														<>
+															<Plus size={18} />
+															<span>Add</span>
+														</>
+													)}
+												</button>
+											)
+										})()}
 									</div>
 								)
 							})}
