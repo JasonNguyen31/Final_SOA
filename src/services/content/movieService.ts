@@ -216,6 +216,14 @@ class MovieService {
 		return response.data.data
 	}
 
+	/**
+	 * Get movie of the week (most viewed this week)
+	 */
+	async getMovieOfTheWeek(): Promise<Movie> {
+		const response = await movieApiClient.get<{success: boolean, data: Movie}>(`${this.baseUrl}/special/movie-of-week`)
+		return response.data.data
+	}
+
 	// Admin methods
 	/**
 	 * Create movie (admin only)

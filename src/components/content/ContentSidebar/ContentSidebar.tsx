@@ -1,35 +1,49 @@
 import { Link } from 'react-router-dom'
-import { Star, Plus, Play, MessageSquare } from 'lucide-react'
-import { useState } from 'react'
+import { Star, Plus, Play } from 'lucide-react'
+import { useState, useEffect } from 'react'
+import { movieService, type Movie } from '@/services/content/movieService'
 
 interface ContentSidebarProps {
 	onOpenModal: (content: 'episodes' | 'anime-week' | 'videos') => void
 }
 
-interface SidebarItem {
-	id: string
-	title: string
-	subtitle: string
-	image: string
-	views: string
-}
-
-interface VideoItem {
-	id: string
-	title: string
-	thumbnail: string
-	views: string
-	comments: number
-	date: string
-	duration: string
-}
-
 export const ContentSidebar: React.FC<ContentSidebarProps> = ({ onOpenModal }) => {
 	const [sidebarTab, setSidebarTab] = useState<'recent' | 'recommended'>('recent')
-	// Empty arrays - data will come from API
-	const recentEpisodes: SidebarItem[] = []
-	const recommendedEpisodes: SidebarItem[] = []
-	const recentVideos: VideoItem[] = []
+	const [recentWatching, setRecentWatching] = useState<Movie[]>([])
+	const [recommendedMovies, setRecommendedMovies] = useState<Movie[]>([])
+	const [movieOfWeek, setMovieOfWeek] = useState<Movie | null>(null)
+	const [loading, setLoading] = useState(true)
+
+	// Fetch data from API
+	useEffect(() => {
+		const fetchData = async () => {
+			try {
+				setLoading(true)
+				const [recent, recommended, movieWeek] = await Promise.all([
+					movieService.getWatchHistory().then(async () => {
+						// getWatchHistory returns WatchProgress[], we need to get full movie data
+						try {
+							return await movieService.getContinueWatching()
+						} catch {
+							return []
+						}
+					}),
+					movieService.getRecommendedMovies(5),
+					movieService.getMovieOfTheWeek()
+				])
+
+				setRecentWatching(recent)
+				setRecommendedMovies(recommended)
+				setMovieOfWeek(movieWeek)
+			} catch (error) {
+				console.error('Failed to fetch sidebar data:', error)
+			} finally {
+				setLoading(false)
+			}
+		}
+
+		fetchData()
+	}, [])
 
 	const renderStars = (rating: number) => {
 		return [...Array(5)].map((_, i) => (
@@ -40,7 +54,12 @@ export const ContentSidebar: React.FC<ContentSidebarProps> = ({ onOpenModal }) =
 		))
 	}
 
-	const currentSidebarEpisodes = sidebarTab === 'recent' ? recentEpisodes : recommendedEpisodes
+	const currentMovies = sidebarTab === 'recent' ? recentWatching : recommendedMovies
+
+	const renderRating = (movie: Movie) => {
+		const rating = movie.totalRatings && movie.totalRatings > 0 ? movie.totalRatings / 20 : 3
+		return Math.min(Math.max(rating, 0), 5)
+	}
 
 	return (
 		<aside className="content-sidebar">
@@ -72,19 +91,21 @@ export const ContentSidebar: React.FC<ContentSidebarProps> = ({ onOpenModal }) =
 				</div>
 
 				<div className="sidebar-list">
-					{currentSidebarEpisodes.length > 0 ? (
-						currentSidebarEpisodes.map((item: SidebarItem) => (
-							<Link key={item.id} to={`/episode/${item.id}`} className="sidebar-item">
-								<img src={item.image} alt={item.title} className="sidebar-item-image" />
+					{!loading && currentMovies.length > 0 ? (
+						currentMovies.map((movie: Movie) => (
+							<Link key={movie.id} to={`/movies/${movie.id}/watch`} className="sidebar-item">
+								<img src={movie.thumbnailUrl || '/placeholder.jpg'} alt={movie.title} className="sidebar-item-image" />
 								<div className="sidebar-item-info">
-									<h4 className="sidebar-item-title">{item.title}</h4>
-									<p className="sidebar-item-subtitle">{item.subtitle}</p>
-									<span className="sidebar-item-views">{item.views}</span>
+									<h4 className="sidebar-item-title">{movie.title}</h4>
+									<p className="sidebar-item-subtitle">{movie.genres?.join(', ') || 'N/A'}</p>
+									<span className="sidebar-item-views">{movie.viewCount || 0} views</span>
 								</div>
 							</Link>
 						))
+					) : loading ? (
+						<div className="sidebar-empty">Loading...</div>
 					) : (
-						<div className="sidebar-empty">No episodes available</div>
+						<div className="sidebar-empty">No movies available</div>
 					)}
 				</div>
 			</div>
@@ -101,49 +122,49 @@ export const ContentSidebar: React.FC<ContentSidebarProps> = ({ onOpenModal }) =
 					</button>
 				</div>
 
-				<div className="anime-week-card">
-					<img src="/images/captain-earth.jpg" alt="Captain Earth" className="anime-week-image" />
-					<div className="anime-week-info">
-						<p className="anime-week-genre">Action, Adventure</p>
-						<h4 className="anime-week-title">Captain Earth</h4>
-						<div className="anime-week-rating">
-							<div className="rating-stars">{renderStars(4)}</div>
-							<span className="rating-text">(94 reviews)</span>
+				{!loading && movieOfWeek ? (
+					<div className="anime-week-card">
+						<img src={movieOfWeek.thumbnailUrl || '/placeholder.jpg'} alt={movieOfWeek.title} className="anime-week-image" />
+						<div className="anime-week-info">
+							<p className="anime-week-genre">{movieOfWeek.genres?.slice(0, 2).join(', ') || 'N/A'}</p>
+							<h4 className="anime-week-title">{movieOfWeek.title}</h4>
+							<div className="anime-week-rating">
+								<div className="rating-stars">{renderStars(renderRating(movieOfWeek))}</div>
+								<span className="rating-text">({movieOfWeek.totalRatings || 0} reviews)</span>
+							</div>
+							<div className="anime-week-details">
+								<div className="anime-week-detail">
+									<span className="anime-week-detail-label">Release year:</span>
+									<span>{movieOfWeek.releaseYear || 'N/A'}</span>
+								</div>
+								<div className="anime-week-detail">
+									<span className="anime-week-detail-label">Views:</span>
+									<span>{movieOfWeek.viewCount || 0}</span>
+								</div>
+								<div className="anime-week-detail">
+									<span className="anime-week-detail-label">Duration:</span>
+									<span>{movieOfWeek.duration || 'N/A'} min</span>
+								</div>
+							</div>
+							<div className="anime-week-stats">
+								<div className="anime-week-stat">
+									<div className="anime-week-stat-value">{movieOfWeek.viewCount || 0}</div>
+									<div className="anime-week-stat-label">Views</div>
+								</div>
+								<div className="anime-week-stat">
+									<div className="anime-week-stat-value">{movieOfWeek.totalRatings || 0}</div>
+									<div className="anime-week-stat-label">Ratings</div>
+								</div>
+							</div>
+							<Link to={`/movies/${movieOfWeek.id}/watch`} className="anime-week-button">
+								<Play className="h-5 w-5" />
+								Watch Now
+							</Link>
 						</div>
-						<div className="anime-week-details">
-							<div className="anime-week-detail">
-								<span className="anime-week-detail-label">Status:</span>
-								<span>On going</span>
-							</div>
-							<div className="anime-week-detail">
-								<span className="anime-week-detail-label">Release year:</span>
-								<span>2014</span>
-							</div>
-							<div className="anime-week-detail">
-								<span className="anime-week-detail-label">Producer:</span>
-								<span>Toei Animation</span>
-							</div>
-							<div className="anime-week-detail">
-								<span className="anime-week-detail-label">Duration:</span>
-								<span>24min. per episode</span>
-							</div>
-						</div>
-						<div className="anime-week-stats">
-							<div className="anime-week-stat">
-								<div className="anime-week-stat-value">75</div>
-								<div className="anime-week-stat-label">Watching</div>
-							</div>
-							<div className="anime-week-stat">
-								<div className="anime-week-stat-value">23</div>
-								<div className="anime-week-stat-label">Episodes</div>
-							</div>
-						</div>
-						<button className="anime-week-button">
-							<Plus className="h-5 w-5" />
-							Start following
-						</button>
 					</div>
-				</div>
+				) : (
+					<div className="sidebar-empty">Loading movie of the week...</div>
+				)}
 			</div>
 
 		</aside>
