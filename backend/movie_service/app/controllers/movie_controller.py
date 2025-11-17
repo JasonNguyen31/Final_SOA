@@ -55,3 +55,12 @@ async def continue_watching_controller(limit: int = 10, user_payload=Depends(ver
         elif isinstance(user_payload, str):
             user_id = user_payload  # verify_token trả về trực tiếp user_id
     return success(await get_continue_watching(user_id, limit))
+
+async def recommended_movies_controller(limit: int = 5, user_payload=Depends(verify_token)):
+    user_id = user_payload["sub"] if isinstance(user_payload, dict) else user_payload
+    movies = await get_recommended_movies(user_id, limit)
+    return success(movies)
+
+async def movie_of_week_controller():
+    movie = await get_movie_of_week()
+    return success(movie)

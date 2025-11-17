@@ -403,3 +403,108 @@ async def get_continue_watching(user_id: str, limit: int = 10):
     ]
     movies = await watching_progress_collection.aggregate(pipeline).to_list(limit)
     return {"movies": movies}
+
+# 8. RECOMMENDED MOVIES - Based on genres watched recently
+async def get_recommended_movies(user_id: str, limit: int = 5):
+    # Get genres from user's watch history
+    pipeline = [
+        {"$match": {"userId": ObjectId(user_id)}},
+        {"$lookup": {
+            "from": "movies",
+            "localField": "movieId",
+            "foreignField": "_id",
+            "as": "movie"
+        }},
+        {"$unwind": "$movie"},
+        {"$project": {"genres": "$movie.genres"}},
+        {"$unwind": "$genres"},
+        {"$group": {"_id": "$genres", "count": {"$sum": 1}}},
+        {"$sort": {"count": -1}},
+        {"$limit": 3}  # Top 3 genres
+    ]
+
+    watched_genres = await watching_progress_collection.aggregate(pipeline).to_list(3)
+    genres = [doc["_id"] for doc in watched_genres if doc["_id"]]
+
+    # Get movies from these genres, excluding already watched
+    watched_movie_ids = await watching_progress_collection.distinct(
+        "movieId", {"userId": ObjectId(user_id)}
+    )
+
+    match_stage = {
+        "isActive": True,
+        "isDeleted": False,
+        "_id": {"$nin": watched_movie_ids}
+    }
+    if genres:
+        match_stage["genres"] = {"$in": genres}
+
+    pipeline = [
+        {"$match": match_stage},
+        {"$sort": {"totalViews": -1}},
+        {"$limit": limit},
+        {"$project": {
+            "id": {"$toString": "$_id"},
+            "title": 1,
+            "thumbnailUrl": 1,
+            "genres": 1,
+            "viewCount": "$totalViews",
+            "rating": 1,
+            "releaseYear": 1,
+            "duration": 1,
+            "totalRatings": 1,
+            "isPremium": 1
+        }}
+    ]
+
+    movies = await movies_collection.aggregate(pipeline).to_list(limit)
+    return movies
+
+# 9. MOVIE OF THE WEEK - Most viewed this week
+async def get_movie_of_week():
+    cache = await get_redis()
+    cache_key_str = "movie_of_week"
+
+    if cache:
+        try:
+            cached = await cache.get(cache_key_str)
+            if cached:
+                return json.loads(cached)
+        except Exception as e:
+            print(f"Redis movie of week error: {e}")
+
+    # Get movies by total views (fallback to viewCountWeek if available)
+    pipeline = [
+        {"$match": {"isActive": True, "isDeleted": False}},
+        {"$addFields": {
+            "effectiveViewCount": {"$ifNull": ["$viewCountWeek", "$totalViews"]}
+        }},
+        {"$sort": {"effectiveViewCount": -1}},
+        {"$limit": 1},
+        {"$project": {
+            "id": {"$toString": "$_id"},
+            "title": 1,
+            "thumbnailUrl": 1,
+            "genres": 1,
+            "viewCount": "$totalViews",
+            "rating": 1,
+            "releaseYear": 1,
+            "duration": 1,
+            "totalRatings": 1,
+            "isPremium": 1,
+            "description": 1
+        }}
+    ]
+
+    result = await movies_collection.aggregate(pipeline).to_list(1)
+
+    if result:
+        movie = result[0]
+        if cache:
+            try:
+                await cache.setex(cache_key_str, 3600, json.dumps(movie))  # Cache for 1 hour
+            except Exception:
+                pass
+        return movie
+
+    raise HTTPException(404, "No movies available")

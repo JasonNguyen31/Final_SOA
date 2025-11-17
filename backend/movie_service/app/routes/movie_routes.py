@@ -3,6 +3,7 @@ from app.controllers.movie_controller import *
 from app.schemas.movie_dto import MovieFilterQuery, SearchQuery, WatchProgressDTO, RateMovieDTO
 from app.core.rate_limiter import rate_limit
 from app.middlewares.jwt_middleware import verify_token, verify_token_optional
+# New controllers are imported via * from app.controllers.movie_controller
 router = APIRouter(tags=["Movies"])
 """
 @router.get("")
@@ -113,3 +114,16 @@ async def get_movie(
     user_payload = Depends(verify_token_optional)
 ):
     return await get_movie_controller(movie_id, user_payload)
+
+# RECOMMENDED MOVIES
+@router.get("/recommended")
+async def recommended(
+    limit: int = 5,
+    user_payload = Depends(verify_token)
+):
+    return await recommended_movies_controller(limit, user_payload)
+
+# MOVIE OF THE WEEK
+@router.get("/special/movie-of-week")
+async def movie_of_week():
+    return await movie_of_week_controller()
