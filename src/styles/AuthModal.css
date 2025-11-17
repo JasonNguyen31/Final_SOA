@@ -28,7 +28,6 @@
     width: 100%;
     max-width: 480px;
     max-height: 90vh;
-    height: auto;
     background: #1a1a1a;
     border-radius: 16px;
     overflow: hidden;
@@ -36,8 +35,6 @@
     animation: slideUp 0.4s ease;
     box-sizing: border-box;
     flex-shrink: 0;
-    display: flex;
-    flex-direction: column;
 }
 
 @keyframes slideUp {
@@ -107,8 +104,7 @@
     position: relative;
     z-index: 1;
     padding: 48px 40px;
-    max-height: calc(90vh - 40px);
-    height: auto;
+    max-height: 90vh;
     overflow-y: auto;
     overflow-x: hidden;
     box-sizing: border-box;
