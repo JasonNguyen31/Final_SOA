@@ -27,11 +27,9 @@
     position: relative;
     width: 480px;
     max-width: calc(100vw - 40px);
-    max-height: 80vh;
     background: #1a1a1a;
     border-radius: 16px;
-    overflow-y: auto;
-    overflow-x: hidden;
+    overflow: hidden;
     box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
     animation: slideUp 0.4s ease;
     box-sizing: border-box;
