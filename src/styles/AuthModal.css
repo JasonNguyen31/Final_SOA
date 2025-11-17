@@ -28,6 +28,7 @@
     width: 100%;
     max-width: 480px;
     max-height: 90vh;
+    height: auto;
     background: #1a1a1a;
     border-radius: 16px;
     overflow: hidden;
@@ -106,12 +107,11 @@
     position: relative;
     z-index: 1;
     padding: 48px 40px;
-    max-height: 100%;
+    max-height: calc(90vh - 40px);
+    height: auto;
     overflow-y: auto;
     overflow-x: hidden;
     box-sizing: border-box;
-    flex: 1;
-    min-height: 0;
     scrollbar-gutter: stable;
 }
 
