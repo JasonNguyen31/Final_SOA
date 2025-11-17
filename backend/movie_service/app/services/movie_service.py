@@ -486,7 +486,57 @@ async def get_recommended_movies(user_id: str, limit: int = 5):
 
     return movies
 
-# 9. MOVIE OF THE WEEK - Most viewed this week
+# 9. RANDOM MOVIES - For guest users on landing page
+async def get_random_movies(limit: int = 5):
+    cache = await get_redis()
+    cache_key_str = f"random_movies:{limit}"
+
+    if cache:
+        try:
+            cached = await cache.get(cache_key_str)
+            if cached:
+                return json.loads(cached)
+        except Exception as e:
+            print(f"Redis random movies error: {e}")
+
+    # Get total count of active movies
+    total_count = await movies_collection.count_documents({
+        "isActive": True,
+        "isDeleted": False
+    })
+
+    if total_count == 0:
+        return []
+
+    # Get random movies
+    pipeline = [
+        {"$match": {"isActive": True, "isDeleted": False}},
+        {"$sample": {"size": min(limit, total_count)}},  # Random sample
+        {"$project": {
+            "id": {"$toString": "$_id"},
+            "title": 1,
+            "thumbnailUrl": 1,
+            "genres": 1,
+            "viewCount": "$totalViews",
+            "rating": 1,
+            "releaseYear": 1,
+            "duration": 1,
+            "totalRatings": 1,
+            "isPremium": 1
+        }}
+    ]
+
+    movies = await movies_collection.aggregate(pipeline).to_list(limit)
+
+    if cache:
+        try:
+            await cache.setex(cache_key_str, 300, json.dumps(movies))  # Cache for 5 minutes
+        except Exception:
+            pass
+
+    return movies
+
+# 10. MOVIE OF THE WEEK - Most viewed this week
 async def get_movie_of_week():
     cache = await get_redis()
     cache_key_str = "movie_of_week"

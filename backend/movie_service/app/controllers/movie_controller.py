@@ -61,6 +61,10 @@ async def recommended_movies_controller(limit: int = 5, user_payload=Depends(ver
     movies = await get_recommended_movies(user_id, limit)
     return success(movies)
 
+async def random_movies_controller(limit: int = 5):
+    movies = await get_random_movies(limit)
+    return success(movies)
+
 async def movie_of_week_controller():
     movie = await get_movie_of_week()
     return success(movie)

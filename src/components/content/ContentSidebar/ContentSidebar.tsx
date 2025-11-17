@@ -26,12 +26,19 @@ export const ContentSidebar: React.FC<ContentSidebarProps> = ({ onOpenModal }) =
 					return null
 				})
 
-				// Fetch recommended movies only if user is logged in
+				// Fetch recommended movies based on authentication status
 				let recommended: Movie[] = []
 
 				if (isAuthenticated) {
+					// Authenticated: get personalized recommendations
 					recommended = await movieService.getRecommendedMovies(5).catch((error) => {
 						console.error('Failed to fetch recommended movies:', error)
+						return []
+					})
+				} else {
+					// Guest: get random movies
+					recommended = await movieService.getRandomMovies(5).catch((error) => {
+						console.error('Failed to fetch random movies:', error)
 						return []
 					})
 				}
@@ -85,7 +92,7 @@ export const ContentSidebar: React.FC<ContentSidebarProps> = ({ onOpenModal }) =
 					) : loading ? (
 						<div className="sidebar-empty">Loading...</div>
 					) : (
-						<div className="sidebar-empty">Sign in to see recommendations</div>
+						<div className="sidebar-empty">No movies available</div>
 					)}
 				</div>
 			</div>

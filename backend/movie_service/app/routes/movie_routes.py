@@ -116,6 +116,13 @@ async def recommended(
 ):
     return await recommended_movies_controller(limit, user_payload)
 
+# RANDOM MOVIES - For guest users
+@router.get("/random")
+async def random(
+    limit: int = 5
+):
+    return await random_movies_controller(limit)
+
 # MOVIE OF THE WEEK
 @router.get("/special/movie-of-week")
 async def movie_of_week():

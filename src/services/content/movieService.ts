@@ -197,7 +197,7 @@ class MovieService {
 	}
 
 	/**
-	 * Get recommended movies
+	 * Get recommended movies (authenticated users)
 	 */
 	async getRecommendedMovies(limit: number = 10): Promise<Movie[]> {
 		try {
@@ -208,6 +208,22 @@ class MovieService {
 			return response.data.data || []
 		} catch (error) {
 			console.error('Error fetching recommended movies:', error)
+			throw error
+		}
+	}
+
+	/**
+	 * Get random movies (guest users)
+	 */
+	async getRandomMovies(limit: number = 5): Promise<Movie[]> {
+		try {
+			const response = await movieApiClient.get<{success: boolean, data: Movie[]}>(`${this.baseUrl}/random`, {
+				params: { limit }
+			})
+			console.log('Random movies response:', response.data)
+			return response.data.data || []
+		} catch (error) {
+			console.error('Error fetching random movies:', error)
 			throw error
 		}
 	}
