@@ -27,6 +27,7 @@
     position: relative;
     width: 100%;
     max-width: 480px;
+    max-height: 90vh;
     background: #1a1a1a;
     border-radius: 16px;
     overflow: hidden;
@@ -34,6 +35,8 @@
     animation: slideUp 0.4s ease;
     box-sizing: border-box;
     flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
 }
 
 @keyframes slideUp {
@@ -103,28 +106,32 @@
     position: relative;
     z-index: 1;
     padding: 48px 40px;
-    max-height: calc(100vh - 80px);
+    max-height: 100%;
     overflow-y: auto;
+    overflow-x: hidden;
     box-sizing: border-box;
+    flex: 1;
+    min-height: 0;
+    scrollbar-gutter: stable;
 }
 
 /* Custom scrollbar cho modal content */
 .auth-modal-content::-webkit-scrollbar {
-    width: 6px;
+    width: 8px;
 }
 
 .auth-modal-content::-webkit-scrollbar-track {
     background: rgba(255, 255, 255, 0.05);
-    border-radius: 3px;
+    border-radius: 4px;
 }
 
 .auth-modal-content::-webkit-scrollbar-thumb {
-    background: rgba(255, 107, 53, 0.5);
-    border-radius: 3px;
+    background: rgba(255, 107, 53, 0.6);
+    border-radius: 4px;
 }
 
 .auth-modal-content::-webkit-scrollbar-thumb:hover {
-    background: rgba(255, 107, 53, 0.7);
+    background: rgba(255, 107, 53, 0.8);
 }
 
 /* Auth Form Styles */
