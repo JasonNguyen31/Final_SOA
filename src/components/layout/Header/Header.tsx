@@ -10,6 +10,7 @@ import { PremiumServiceModal } from '@/components/common/Modal/PremiumServiceMod
 import { CollectionModal } from '@/components/common/Modal/CollectionModal'
 import { WatchingHistoryModal } from '@/components/common/Modal/WatchingHistoryModal'
 import { ReadingHistoryModal } from '@/components/common/Modal/ReadingHistoryModal'
+import { NotificationCenterModal } from '@/components/common/Modal/NotificationCenterModal'
 import '@/styles/Header.css'
 import logoCoverImage from '@/assets/images/header-logo.jpg'
 
@@ -24,6 +25,7 @@ export const Header = () => {
 	const [showMoviesMenu, setShowMoviesMenu] = useState(false)
 	const [showBooksMenu, setShowBooksMenu] = useState(false)
 	const [showNotifications, setShowNotifications] = useState(false)
+	const [showNotificationModal, setShowNotificationModal] = useState(false)
 	const [selectedNotification, setSelectedNotification] = useState<number | null>(null)
 	const [hoverMovies, setHoverMovies] = useState(false)
 	const [hoverBooks, setHoverBooks] = useState(false)
@@ -342,10 +344,11 @@ export const Header = () => {
 								<button
 									className="notifications-button"
 									onClick={() => {
-										setShowNotifications(!showNotifications)
+										setShowNotificationModal(!showNotificationModal)
 										setShowMoviesMenu(false)
 										setShowBooksMenu(false)
 										setShowUserMenu(false)
+										setShowNotifications(false)
 									}}
 								>
 									<Bell className="notifications-icon" />
@@ -354,7 +357,7 @@ export const Header = () => {
 									)}
 								</button>
 
-								{showNotifications && (
+								{showNotifications && !showNotificationModal && (
 									<div
 										className="notifications-dropdown"
 										onMouseLeave={() => {
@@ -514,7 +517,8 @@ export const Header = () => {
 			</div>
 
 			{/* Modals */}
-			<ProfileModal isOpen={showProfileModal} onClose={() => setShowProfileModal(false)} />
+			<NotificationCenterModal isOpen={showNotificationModal} onClose={() => setShowNotificationModal(false)} />
+		<ProfileModal isOpen={showProfileModal} onClose={() => setShowProfileModal(false)} />
 			<WalletModal isOpen={showWalletModal} onClose={() => setShowWalletModal(false)} />
 			<PremiumServiceModal isOpen={showPremiumServiceModal} onClose={() => setShowPremiumServiceModal(false)} />
 			<CollectionModal isOpen={showCollectionModal} onClose={() => setShowCollectionModal(false)} />
