@@ -1,4 +1,4 @@
-/* Auth Modal Overlay - v2 */
+/* Auth Modal Overlay - v3 */
 .auth-modal-overlay {
     position: fixed;
     inset: 0;
@@ -27,14 +27,15 @@
     position: relative;
     width: 100%;
     max-width: 480px;
-    max-height: 90vh;
+    max-height: 80vh;
     background: #1a1a1a;
     border-radius: 16px;
-    overflow: hidden;
+    overflow-y: auto;
+    overflow-x: hidden;
     box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
     animation: slideUp 0.4s ease;
     box-sizing: border-box;
-    flex-shrink: 0;
+    flex-shrink: 1;
 }
 
 @keyframes slideUp {
@@ -104,29 +105,25 @@
     position: relative;
     z-index: 1;
     padding: 48px 40px;
-    max-height: 90vh;
-    overflow-y: auto;
-    overflow-x: hidden;
     box-sizing: border-box;
-    scrollbar-gutter: stable;
 }
 
-/* Custom scrollbar cho modal content */
-.auth-modal-content::-webkit-scrollbar {
+/* Custom scrollbar cho modal container */
+.auth-modal-container::-webkit-scrollbar {
     width: 8px;
 }
 
-.auth-modal-content::-webkit-scrollbar-track {
+.auth-modal-container::-webkit-scrollbar-track {
     background: rgba(255, 255, 255, 0.05);
     border-radius: 4px;
 }
 
-.auth-modal-content::-webkit-scrollbar-thumb {
+.auth-modal-container::-webkit-scrollbar-thumb {
     background: rgba(255, 107, 53, 0.6);
     border-radius: 4px;
 }
 
-.auth-modal-content::-webkit-scrollbar-thumb:hover {
+.auth-modal-container::-webkit-scrollbar-thumb:hover {
     background: rgba(255, 107, 53, 0.8);
 }
 
