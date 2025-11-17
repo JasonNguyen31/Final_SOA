@@ -1,4 +1,4 @@
-/* Auth Modal Overlay */
+/* Auth Modal Overlay - v2 */
 .auth-modal-overlay {
     position: fixed;
     inset: 0;
@@ -173,6 +173,12 @@
     gap: 8px;
 }
 
+/* Ensure form inputs in auth modals always have correct border */
+.auth-modal-content .form-input,
+.auth-container .form-input {
+    border: 2px solid #ff6b35;
+}
+
 .input-icon {
     position: relative;
     width: 22px;
@@ -219,13 +225,15 @@
     opacity: 0.6;
 }
 
-/* Input Error State */
-.form-input.input-error {
-    border-color: #ff4444;
+/* Input Error State - Only apply when explicitly marked with input-error class */
+.auth-modal-content .form-input.input-error,
+.auth-container .form-input.input-error {
+    border-color: #ff4444 !important;
     background: rgba(255, 68, 68, 0.06);
 }
 
-.form-input.input-error:focus {
+.auth-modal-content .form-input.input-error:focus,
+.auth-container .form-input.input-error:focus {
     border-color: #ff4444;
     background: rgba(255, 68, 68, 0.08);
     box-shadow: 0 0 0 3px rgba(255, 68, 68, 0.1), inset 0 0 20px rgba(255, 68, 68, 0.05);

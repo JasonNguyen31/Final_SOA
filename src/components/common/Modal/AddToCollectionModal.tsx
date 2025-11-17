@@ -53,7 +53,24 @@ export const AddToCollectionModal = ({
 		setIsLoading(true)
 		try {
 			const data = await collectionService.getUserCollections()
-			setCollections(data)
+
+			// Auto-delete empty collections
+			const collectionsWithItems = data.filter(c => c.itemCount > 0)
+
+			if (collectionsWithItems.length < data.length) {
+				// Found empty collections, delete them
+				const emptyCollections = data.filter(c => c.itemCount === 0)
+				for (const empty of emptyCollections) {
+					try {
+						await collectionService.deleteCollection(empty._id)
+						console.log(`Deleted empty collection: ${empty.name}`)
+					} catch (err) {
+						console.error(`Failed to delete collection ${empty._id}:`, err)
+					}
+				}
+			}
+
+			setCollections(collectionsWithItems)
 		} catch (error) {
 			console.error('Failed to load collections:', error)
 			showNotificationModal('error', 'Failed to load collections. Please try again.')
