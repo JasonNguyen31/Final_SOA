@@ -9,6 +9,7 @@
     z-index: 9999;
     padding: 20px;
     animation: fadeIn 0.3s ease;
+    box-sizing: border-box;
 }
 
 @keyframes fadeIn {
@@ -32,6 +33,7 @@
     box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
     animation: slideUp 0.4s ease;
     box-sizing: border-box;
+    flex-shrink: 0;
 }
 
 @keyframes slideUp {
@@ -129,6 +131,7 @@
 .auth-form {
     width: 100%;
     overflow: hidden;
+    box-sizing: border-box;
 }
 
 .auth-title {
@@ -153,6 +156,8 @@
     gap: 15px;
     box-sizing: border-box;
     max-width: 100%;
+    width: 100%;
+    min-width: 0;
 }
 
 /* Form Group */
@@ -160,6 +165,7 @@
     display: flex;
     flex-direction: column;
     gap: 8px;
+    min-width: 0;
 }
 
 .form-label {
@@ -174,6 +180,7 @@
     display: flex;
     align-items: center;
     gap: 8px;
+    min-width: 0;
 }
 
 .input-icon {
@@ -193,6 +200,7 @@
 
 .form-input {
     flex: 1;
+    min-width: 0;
     padding: 14px 16px;
     background: rgba(255, 255, 255, 0.04);
     border-radius: 10px;
@@ -352,11 +360,13 @@
     font-size: 14px;
     font-weight: 500;
     text-align: center;
-    word-break: break-word;
+    word-break: break-all;
     overflow-wrap: break-word;
+    width: 100%;
     max-width: 100%;
     box-sizing: border-box;
     overflow: hidden;
+    white-space: normal;
 }
 
 /* Switch Text */
