@@ -34,6 +34,7 @@
     animation: slideUp 0.4s ease;
     box-sizing: border-box;
     flex: 0 0 auto;
+    max-height: none;
 }
 
 @keyframes slideUp {
@@ -108,24 +109,6 @@
     width: 100%;
 }
 
-/* Custom scrollbar cho modal container */
-.auth-modal-container::-webkit-scrollbar {
-    width: 8px;
-}
-
-.auth-modal-container::-webkit-scrollbar-track {
-    background: rgba(255, 255, 255, 0.05);
-    border-radius: 4px;
-}
-
-.auth-modal-container::-webkit-scrollbar-thumb {
-    background: rgba(255, 107, 53, 0.6);
-    border-radius: 4px;
-}
-
-.auth-modal-container::-webkit-scrollbar-thumb:hover {
-    background: rgba(255, 107, 53, 0.8);
-}
 
 /* Auth Form Styles */
 .auth-form {

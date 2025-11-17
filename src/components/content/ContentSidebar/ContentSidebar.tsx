@@ -44,10 +44,10 @@ export const ContentSidebar: React.FC<ContentSidebarProps> = ({ onOpenModal }) =
 
 	return (
 		<aside className="content-sidebar">
-			{/* Recent Episodes */}
+			{/* Recent Watching */}
 			<div className="sidebar-section">
 				<div className="sidebar-header">
-					<h3 className="sidebar-title">Recent Episodes</h3>
+					<h3 className="sidebar-title">Recent Watching</h3>
 					<button
 						onClick={() => onOpenModal('episodes')}
 						className="sidebar-link-button"
@@ -61,7 +61,7 @@ export const ContentSidebar: React.FC<ContentSidebarProps> = ({ onOpenModal }) =
 						onClick={() => setSidebarTab('recent')}
 						className={`sidebar-tab ${sidebarTab === 'recent' ? 'active' : ''}`}
 					>
-						Recent Episodes
+						History
 					</button>
 					<button
 						onClick={() => setSidebarTab('recommended')}
@@ -89,10 +89,10 @@ export const ContentSidebar: React.FC<ContentSidebarProps> = ({ onOpenModal }) =
 				</div>
 			</div>
 
-			{/* Anime of the Week */}
+			{/* Movie of the Week */}
 			<div className="sidebar-section">
 				<div className="sidebar-header">
-					<h3 className="sidebar-title">Anime of the Week</h3>
+					<h3 className="sidebar-title">Movie of the Week</h3>
 					<button
 						onClick={() => onOpenModal('anime-week')}
 						className="sidebar-link-button"
@@ -146,45 +146,6 @@ export const ContentSidebar: React.FC<ContentSidebarProps> = ({ onOpenModal }) =
 				</div>
 			</div>
 
-			{/* Most Recent Videos */}
-			<div className="sidebar-section">
-				<div className="sidebar-header">
-					<h3 className="sidebar-title">Most Recent Videos</h3>
-					<button
-						onClick={() => onOpenModal('videos')}
-						className="sidebar-link-button"
-					>
-						View more
-					</button>
-				</div>
-
-				<div className="sidebar-list">
-					{recentVideos.length > 0 ? (
-						recentVideos.map((video: VideoItem) => (
-							<Link key={video.id} to={`/video/${video.id}`} className="video-item">
-								<div className="video-thumbnail-wrapper">
-									<img src={video.thumbnail} alt={video.title} className="video-thumbnail" />
-									<div className="video-play-icon">
-										<Play className="h-5 w-5 text-white" fill="white" />
-									</div>
-									<span className="video-duration">{video.duration}</span>
-								</div>
-								<div className="video-info">
-									<p className="video-date">{video.date}</p>
-									<h4 className="video-title">{video.title}</h4>
-									<span className="video-views">{video.views}</span>
-									<div className="video-comments">
-										<MessageSquare className="h-3 w-3" />
-										<span>{video.comments} comments</span>
-									</div>
-								</div>
-							</Link>
-						))
-					) : (
-						<div className="sidebar-empty">No videos available</div>
-					)}
-				</div>
-			</div>
 		</aside>
 	)
 }
