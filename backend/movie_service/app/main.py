@@ -27,8 +27,6 @@ app.add_middleware(SlowAPIMiddleware)
 app.include_router(movie_routes.router, prefix="/api/movies")
 app.include_router(comment_routes.router, prefix="/api")
 
-@app.exception_handler(RateLimitExceeded)
-
 @app.exception_handler(HTTPException)
 async def http_exception_handler(request: Request, exc: HTTPException):
     return JSONResponse(
