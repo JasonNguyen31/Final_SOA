@@ -50,7 +50,24 @@ export const CollectionModal = ({ isOpen, onClose }: CollectionModalProps) => {
 			await collectionService.removeItemFromCollection(collectionId, contentId)
 			// Refresh collections after removal
 			const data = await collectionService.getUserCollections()
-			setCollections(data)
+
+			// Auto-delete empty collections
+			const collectionsWithoutEmpty = data.filter(collection => collection.itemCount > 0)
+
+			if (collectionsWithoutEmpty.length < data.length) {
+				// Some empty collections were found, delete them
+				const emptyCollections = data.filter(collection => collection.itemCount === 0)
+				for (const emptyCollection of emptyCollections) {
+					try {
+						await collectionService.deleteCollection(emptyCollection._id)
+					} catch (deleteError) {
+						console.error(`Failed to delete empty collection ${emptyCollection._id}:`, deleteError)
+					}
+				}
+				setCollections(collectionsWithoutEmpty)
+			} else {
+				setCollections(data)
+			}
 		} catch (error) {
 			console.error('Failed to remove item:', error)
 		}

@@ -177,6 +177,12 @@
     height: 20px;
     color: #888;
     pointer-events: none;
+    transition: color 0.3s ease;
+}
+
+.form-input:focus ~ .input-icon,
+.input-wrapper:has(.form-input:focus) .input-icon {
+    color: #ff6b35;
 }
 
 .form-input {
@@ -197,7 +203,12 @@
 }
 
 .form-input::placeholder {
-    color: #666;
+    color: #888;
+    font-weight: 400;
+}
+
+.form-input:focus::placeholder {
+    color: #999;
 }
 
 /* Input Error State */
