@@ -1,4 +1,4 @@
-/* Auth Modal Overlay - v3 */
+/* Auth Modal Overlay - v2 */
 .auth-modal-overlay {
     position: fixed;
     inset: 0;
@@ -9,7 +9,6 @@
     z-index: 9999;
     padding: 20px;
     animation: fadeIn 0.3s ease;
-    box-sizing: border-box;
 }
 
 @keyframes fadeIn {
@@ -25,16 +24,13 @@
 /* Modal Container */
 .auth-modal-container {
     position: relative;
-    width: 480px;
-    max-width: calc(100vw - 40px);
+    width: 100%;
+    max-width: 480px;
     background: #1a1a1a;
     border-radius: 16px;
     overflow: hidden;
     box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
     animation: slideUp 0.4s ease;
-    box-sizing: border-box;
-    flex: 0 0 auto;
-    max-height: none;
 }
 
 @keyframes slideUp {
@@ -104,18 +100,32 @@
     position: relative;
     z-index: 1;
     padding: 48px 40px;
-    box-sizing: border-box;
-    min-width: 0;
-    width: 100%;
+    max-height: calc(100vh - 80px);
+    overflow-y: auto;
 }
 
+/* Custom scrollbar cho modal content */
+.auth-modal-content::-webkit-scrollbar {
+    width: 6px;
+}
+
+.auth-modal-content::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 3px;
+}
+
+.auth-modal-content::-webkit-scrollbar-thumb {
+    background: rgba(255, 107, 53, 0.5);
+    border-radius: 3px;
+}
+
+.auth-modal-content::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 107, 53, 0.7);
+}
 
 /* Auth Form Styles */
 .auth-form {
     width: 100%;
-    overflow: hidden;
-    box-sizing: border-box;
-    min-width: 0;
 }
 
 .auth-title {
@@ -140,8 +150,6 @@
     gap: 15px;
     box-sizing: border-box;
     max-width: 100%;
-    width: 100%;
-    min-width: 0;
 }
 
 /* Form Group */
@@ -149,8 +157,6 @@
     display: flex;
     flex-direction: column;
     gap: 8px;
-    min-width: 0;
-    width: 100%;
 }
 
 .form-label {
@@ -165,8 +171,6 @@
     display: flex;
     align-items: center;
     gap: 8px;
-    min-width: 0;
-    width: 100%;
 }
 
 .input-icon {
@@ -186,7 +190,6 @@
 
 .form-input {
     flex: 1;
-    min-width: 0;
     padding: 14px 16px;
     background: rgba(255, 255, 255, 0.04);
     border-radius: 10px;
@@ -200,6 +203,8 @@
 .form-input:focus {
     outline: none;
     border-color: #ff6b35 !important;
+    background: rgba(255, 107, 53, 0.08);
+    box-shadow: 0 0 0 3px rgba(255, 107, 53, 0.1), inset 0 0 20px rgba(255, 107, 53, 0.05);
 }
 
 .form-input::placeholder {
@@ -346,13 +351,10 @@
     font-size: 14px;
     font-weight: 500;
     text-align: center;
-    word-break: break-all;
+    word-break: break-word;
     overflow-wrap: break-word;
-    width: 100%;
     max-width: 100%;
     box-sizing: border-box;
-    overflow: hidden;
-    white-space: normal;
 }
 
 /* Switch Text */

@@ -1,8 +1,9 @@
-import { Link } from 'react-router-dom'
-import { Star, Plus, Play } from 'lucide-react'
+import { Link, useNavigate } from 'react-router-dom'
+import { Star, Play } from 'lucide-react'
 import { useState, useEffect } from 'react'
 import { movieService, type Movie } from '@/services/content/movieService'
 import { useAuth } from '@/context/AuthContext'
+import { useAuthModal } from '@/context/AuthModalContext'
 
 interface ContentSidebarProps {
 	onOpenModal: (content: 'episodes' | 'anime-week' | 'videos') => void
@@ -10,6 +11,8 @@ interface ContentSidebarProps {
 
 export const ContentSidebar: React.FC<ContentSidebarProps> = ({ onOpenModal }) => {
 	const { isAuthenticated } = useAuth()
+	const { openLogin } = useAuthModal()
+	const navigate = useNavigate()
 	const [recommendedMovies, setRecommendedMovies] = useState<Movie[]>([])
 	const [movieOfWeek, setMovieOfWeek] = useState<Movie | null>(null)
 	const [loading, setLoading] = useState(true)
@@ -80,7 +83,7 @@ export const ContentSidebar: React.FC<ContentSidebarProps> = ({ onOpenModal }) =
 				<div className="sidebar-list">
 					{!loading && recommendedMovies.length > 0 ? (
 						recommendedMovies.map((movie: Movie) => (
-							<Link key={movie.id} to={`/movies/${movie.id}/watch`} className="sidebar-item">
+							<Link key={movie.id} to={`/movies/${movie.id}`} className="sidebar-item">
 								<img src={movie.thumbnailUrl || '/placeholder.jpg'} alt={movie.title} className="sidebar-item-image" />
 								<div className="sidebar-item-info">
 									<h4 className="sidebar-item-title">{movie.title}</h4>
@@ -143,10 +146,19 @@ export const ContentSidebar: React.FC<ContentSidebarProps> = ({ onOpenModal }) =
 									<div className="anime-week-stat-label">Ratings</div>
 								</div>
 							</div>
-							<Link to={`/movies/${movieOfWeek.id}/watch`} className="anime-week-button">
+							<button
+								onClick={() => {
+									if (isAuthenticated) {
+										navigate(`/movies/${movieOfWeek.id}/watch`)
+									} else {
+										openLogin()
+									}
+								}}
+								className="anime-week-button"
+							>
 								<Play className="h-5 w-5" />
 								Watch Now
-							</Link>
+							</button>
 						</div>
 					</div>
 				) : (

@@ -1,4 +1,4 @@
-import { Search, ChevronDown, Bell } from 'lucide-react'
+import { ChevronDown, Bell } from 'lucide-react'
 import { useState, useEffect } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { useAuth } from '@/context/AuthContext'
@@ -11,6 +11,8 @@ import { CollectionModal } from '@/components/common/Modal/CollectionModal'
 import { WatchingHistoryModal } from '@/components/common/Modal/WatchingHistoryModal'
 import { ReadingHistoryModal } from '@/components/common/Modal/ReadingHistoryModal'
 import { NotificationCenterModal } from '@/components/common/Modal/NotificationCenterModal'
+import { movieService } from '@/services/content/movieService'
+import { SearchBox } from '@/components/search/SearchBox'
 import '@/styles/Header.css'
 import logoCoverImage from '@/assets/images/header-logo.jpg'
 
@@ -24,6 +26,7 @@ export const Header = () => {
 	const [showUserMenu, setShowUserMenu] = useState(false)
 	const [showMoviesMenu, setShowMoviesMenu] = useState(false)
 	const [showBooksMenu, setShowBooksMenu] = useState(false)
+	const [genres, setGenres] = useState<string[]>([])
 	const [showNotifications, setShowNotifications] = useState(false)
 	const [showNotificationModal, setShowNotificationModal] = useState(false)
 	const [selectedNotification, setSelectedNotification] = useState<number | null>(null)
@@ -96,6 +99,19 @@ export const Header = () => {
 			window.location.href = '/'
 		}
 	}
+
+	// Fetch genres on mount
+	useEffect(() => {
+		const fetchGenres = async () => {
+			try {
+				const fetchedGenres = await movieService.getGenres()
+				setGenres(fetchedGenres)
+			} catch (error) {
+				console.error('Error fetching genres:', error)
+			}
+		}
+		fetchGenres()
+	}, [])
 
 	// Handle clicks outside dropdowns
 	useEffect(() => {
@@ -197,11 +213,16 @@ export const Header = () => {
 									<ChevronDown className="nav-icon" />
 								</button>
 								{showMoviesMenu && (
-									<div className="dropdown-menu">
-										<a href="/movies/action" className="dropdown-item">Action</a>
-										<a href="/movies/comedy" className="dropdown-item">Comedy</a>
-										<a href="/movies/drama" className="dropdown-item">Drama</a>
-										<a href="/movies/romance" className="dropdown-item">Romance</a>
+									<div className="dropdown-menu genres-dropdown">
+										{genres.map((genre) => (
+											<a
+												key={genre}
+												href={`/home?genre=${encodeURIComponent(genre)}`}
+												className="dropdown-item"
+											>
+												{genre}
+											</a>
+										))}
 									</div>
 								)}
 							</div>
@@ -261,36 +282,7 @@ export const Header = () => {
 						</nav>
 
 						{/* Search Bar */}
-						<div className="search-box">
-							<input
-								type="text"
-								placeholder="Search movies, anime, books..."
-								className="search-input"
-								value={localSearchQuery}
-								onChange={(e) => setLocalSearchQuery(e.target.value)}
-								onKeyDown={(e) => {
-									if (e.key === 'Enter' && localSearchQuery.trim()) {
-										setSearchQuery(localSearchQuery.trim())
-										// Navigate to home if not already there
-										if (location.pathname !== '/home') {
-											navigate('/home')
-										}
-									}
-								}}
-							/>
-							<Search
-								className="search-icon"
-								onClick={() => {
-									if (localSearchQuery.trim()) {
-										setSearchQuery(localSearchQuery.trim())
-										if (location.pathname !== '/home') {
-											navigate('/home')
-										}
-									}
-								}}
-								style={{ cursor: 'pointer' }}
-							/>
-						</div>
+					<SearchBox placeholder="Search movies, anime, books..." />
 
 						{/* User Section with Active Dot */}
 						<div className="user-section">

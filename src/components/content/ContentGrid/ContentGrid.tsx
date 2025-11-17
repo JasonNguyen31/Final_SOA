@@ -1,5 +1,4 @@
-import { Link } from 'react-router-dom'
-import { Play, X, ArrowLeft } from 'lucide-react'
+import { X, ArrowLeft } from 'lucide-react'
 import '@/styles/ContentGrid.css'
 import contentGridBg from '@/assets/images/xza.jpg'
 import { useState, useEffect, useMemo } from 'react'
@@ -9,31 +8,47 @@ import { Pagination } from '../Pagination/Pagination'
 import { ContentSidebar } from '../ContentSidebar/ContentSidebar'
 import { useMovies } from '@/hooks/useMovies'
 import { useSearch } from '@/context/SearchContext'
+import { useSearchParams, useNavigate, useLocation } from 'react-router-dom'
 
 type TabType = 'movies' | 'anime' | 'books'
 type ModalContentType = 'episodes' | 'anime-week' | 'videos'
 
 export const ContentGrid = () => {
 	const { searchQuery, clearSearch, isSearchActive } = useSearch()
+	const [searchParams] = useSearchParams()
+	const navigate = useNavigate()
+	const location = useLocation()
 	const [currentPage, setCurrentPage] = useState(1)
 	const [activeTab, setActiveTab] = useState<TabType>('movies')
 	const [showModal, setShowModal] = useState(false)
 	const [modalContent, setModalContent] = useState<ModalContentType>('episodes')
 
-	// Build query params based on active tab or search
+	// Get genre from URL params
+	const selectedGenre = searchParams.get('genre')
+	console.log('[ContentGrid] Selected genre:', selectedGenre)
+	console.log('[ContentGrid] URL search params:', location.search)
+
+	// Build query params based on active tab, search, or genre
 	const queryParams = useMemo(() => {
 		const params: any = {
 			page: currentPage,
-			limit: 12,
+			limit: 16,
 			sortBy: 'releaseYear',
 			order: 'desc'
 		}
 
+		// If filtering by genre, include genre and show all types (movies + anime)
+		if (selectedGenre) {
+			params.genre = selectedGenre
+			// Don't filter by type when showing genre - show both movies and anime
+		}
 		// If searching, use search query instead of tab filtering
-		if (isSearchActive) {
+		else if (isSearchActive) {
 			params.search = searchQuery
 			// Don't filter by type when searching, show all results
-		} else {
+		}
+		// Normal tab filtering
+		else {
 			switch (activeTab) {
 				case 'movies':
 					// Filter for movies (type = 'movie')
@@ -49,8 +64,9 @@ export const ContentGrid = () => {
 			}
 		}
 
+		console.log('[ContentGrid] Query params:', params)
 		return params
-	}, [currentPage, activeTab, searchQuery, isSearchActive])
+	}, [currentPage, activeTab, searchQuery, isSearchActive, selectedGenre])
 
 	// Fetch movies using the hook
 	const { movies, loading, error, pagination } = useMovies(queryParams)
@@ -64,10 +80,36 @@ export const ContentGrid = () => {
 		return movies
 	}, [movies, activeTab])
 
-	// Reset page when tab changes or search query changes
+	// Reset page when tab changes, search query changes, or genre changes
 	useEffect(() => {
 		setCurrentPage(1)
-	}, [activeTab, searchQuery])
+	}, [activeTab, searchQuery, selectedGenre])
+
+	// Auto-scroll to content grid when genre is selected
+	useEffect(() => {
+		if (selectedGenre) {
+			// Wait for content to render, then scroll
+			setTimeout(() => {
+				const wrapper = document.querySelector('.content-grid-wrapper')
+				if (wrapper) {
+					const headerHeight = 80 // Adjust based on your header height
+					const wrapperPosition = wrapper.getBoundingClientRect().top + window.pageYOffset
+
+					window.scrollTo({
+						top: wrapperPosition - headerHeight,
+						behavior: 'smooth'
+					})
+				}
+			}, 100)
+		}
+	}, [selectedGenre])
+
+	// Handle back from genre view
+	const handleBackFromGenre = () => {
+		// Navigate to current page without genre param
+		const currentPath = location.pathname
+		navigate(currentPath)
+	}
 
 	// Disable scroll when modal is open
 	useEffect(() => {
@@ -119,6 +161,19 @@ export const ContentGrid = () => {
 			<div className="content-grid-container">
 				{/* LEFT SECTION - Main Content */}
 				<div className="content-main">
+					{/* Genre Header with Back Button */}
+					{selectedGenre && !isSearchActive && (
+						<div className="search-results-header">
+							<button onClick={handleBackFromGenre} className="back-button">
+								<ArrowLeft className="back-icon" />
+								<span>Back to Browse</span>
+							</button>
+							<h2 className="search-results-title">
+								{selectedGenre} ({pagination.totalItems || 0} titles)
+							</h2>
+						</div>
+					)}
+
 					{/* Search Results Header with Back Button */}
 					{isSearchActive && (
 						<div className="search-results-header">
@@ -132,8 +187,8 @@ export const ContentGrid = () => {
 						</div>
 					)}
 
-					{/* Tabs/Filters - Hide when searching */}
-					{!isSearchActive && <ContentFilters activeTab={activeTab} onTabChange={handleTabChange} />}
+					{/* Tabs/Filters - Hide when searching or filtering by genre */}
+					{!isSearchActive && !selectedGenre && <ContentFilters activeTab={activeTab} onTabChange={handleTabChange} />}
 
 					{/* Loading State */}
 					{loading && (

@@ -19,7 +19,6 @@ import ProfilePage from '@/pages/user/Profile/ProfilePage'
 import ReadHistory from '@/pages/user/Profile/ReadHistory'
 import WatchHistory from '@/pages/user/Profile/WatchHistory'
 import Collections from '@/pages/user/Profile/Collections'
-import SearchPage from '@/pages/user/Search/SearchPage'
 import WalletPage from '@/pages/user/Wallet/WalletPage'
 import TransactionHistory from '@/pages/user/Wallet/TransactionHistory'
 import PremiumPage from '@/pages/user/Premium/PremiumPage'
@@ -74,7 +73,6 @@ export const AppRoutes = () => {
 					<Route path="collections" element={<Collections />} />
 				</Route>
 
-				<Route path="/search" element={<SearchPage />} />
 
 				<Route path="/wallet">
 					<Route index element={<WalletPage />} />

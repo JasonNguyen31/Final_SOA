@@ -35,6 +35,8 @@ async def get_movies(user_id: str | None, query: MovieFilterQuery):
     pipeline = []
 
     match_stage = {"isActive": True, "isDeleted": False}
+    if query.type:
+        match_stage["type"] = query.type
     if query.genre:
         match_stage["genres"] = query.genre
     if query.year:
@@ -118,9 +120,14 @@ async def search_content(
             "id": {"$toString": "$_id"},
             "title": 1,
             "description": 1,
-            "thumbnail": "$thumbnailUrl",
+            "thumbnailUrl": 1,
+            "bannerUrl": 1,
             "rating": 1,
             "totalViews": 1,
+            "releaseYear": 1,
+            "genres": 1,
+            "duration": 1,
+            "isPremium": 1,
             "adaptedFromBookId": 1
         }}
     ]
@@ -392,13 +399,15 @@ async def get_continue_watching(user_id: str, limit: int = 10):
         {"$project": {
             "id": {"$toString": "$movie._id"},
             "title": "$movie.title",
-            "thumbnail": "$movie.thumbnailUrl",
-            "progress": {
-                "watchedSeconds": "$currentTime",
-                "totalSeconds": "$duration",
-                "percentage": "$percentage",
-                "lastWatchedAt": {"$dateToString": {"format": "%Y-%m-%dT%H:%M:%SZ", "date": "$viewedAt"}}
-            }
+            "thumbnailUrl": "$movie.thumbnailUrl",
+            "bannerUrl": "$movie.bannerUrl",
+            "rating": "$movie.rating",
+            "releaseYear": "$movie.releaseYear",
+            "genres": "$movie.genres",
+            "duration": "$duration",
+            "currentTime": "$currentTime",
+            "percentage": "$percentage",
+            "lastWatchedAt": {"$dateToString": {"format": "%Y-%m-%dT%H:%M:%SZ", "date": "$viewedAt"}}
         }}
     ]
     movies = await watching_progress_collection.aggregate(pipeline).to_list(limit)
@@ -590,3 +599,17 @@ async def get_movie_of_week():
         return movie
 
     raise HTTPException(404, "No movies available")
+
+# 11. GET ALL GENRES - For genre filter dropdown
+async def get_all_genres():
+    """Get all unique genres from active movies"""
+    pipeline = [
+        {"$match": {"isActive": True, "isDeleted": False}},
+        {"$unwind": "$genres"},
+        {"$group": {"_id": "$genres"}},
+        {"$sort": {"_id": 1}},
+        {"$project": {"_id": 0, "name": "$_id"}}
+    ]
+
+    genres = await movies_collection.aggregate(pipeline).to_list(None)
+    return [g["name"] for g in genres]

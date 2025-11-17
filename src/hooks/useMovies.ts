@@ -18,7 +18,13 @@ export const useMovies = (params?: MovieQueryParams) => {
 		try {
 			setLoading(true)
 			setError(null)
+			console.log('[useMovies] Fetching with params:', params)
 			const response = await movieService.getMovies(params)
+			console.log('[useMovies] Response:', {
+				moviesCount: response.movies.length,
+				pagination: response.pagination,
+				movieIds: response.movies.map(m => m.id)
+			})
 			// Map thumbnail to image for ContentCard compatibility
 			const moviesWithImage = response.movies.map(movie => ({
 				...movie,
@@ -39,14 +45,18 @@ export const useMovies = (params?: MovieQueryParams) => {
 		} catch (err) {
 			const message = getUserFriendlyErrorMessage(err)
 			setError(message)
+			console.error('[useMovies] Error:', err)
 		} finally {
 			setLoading(false)
 		}
-	}, [params])
+	}, [JSON.stringify(params)])
 
 	useEffect(() => {
-		fetchMovies()
-	}, [fetchMovies])
+		// Only fetch if params is provided (not null)
+		if (params !== null && params !== undefined) {
+			fetchMovies()
+		}
+	}, [fetchMovies, params])
 
 	return {
 		movies,

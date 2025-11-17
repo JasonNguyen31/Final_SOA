@@ -1,0 +1,313 @@
+{
+  "info": {
+    "name": "Online Entertainment Platform API",
+    "description": "Complete API collection for testing",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost",
+      "type": "string"
+    },
+    {
+      "key": "token",
+      "value": "",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "Auth Service",
+      "item": [
+        {
+          "name": "Health Check",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}:8001/health",
+              "host": ["{{baseUrl}}"],
+              "port": "8001",
+              "path": ["health"]
+            }
+          }
+        },
+        {
+          "name": "Register",
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"test@example.com\",\n  \"password\": \"password123\",\n  \"fullName\": \"Test User\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}:8001/api/auth/register",
+              "host": ["{{baseUrl}}"],
+              "port": "8001",
+              "path": ["api", "auth", "register"]
+            }
+          }
+        },
+        {
+          "name": "Login",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.environment.set('token', jsonData.data.access_token);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"kiliangill@example.com\",\n  \"password\": \"admin@123\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}:8001/api/auth/login",
+              "host": ["{{baseUrl}}"],
+              "port": "8001",
+              "path": ["api", "auth", "login"]
+            }
+          }
+        },
+        {
+          "name": "Logout",
+          "request": {
+            "method": "POST",
+            "header": [
+              {"key": "Authorization", "value": "Bearer {{token}}"}
+            ],
+            "url": {
+              "raw": "{{baseUrl}}:8001/api/auth/logout",
+              "host": ["{{baseUrl}}"],
+              "port": "8001",
+              "path": ["api", "auth", "logout"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Movie Service",
+      "item": [
+        {
+          "name": "Health Check",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}:8003/health",
+              "host": ["{{baseUrl}}"],
+              "port": "8003",
+              "path": ["health"]
+            }
+          }
+        },
+        {
+          "name": "List Movies",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}:8003/api/movies?page=1&limit=20",
+              "host": ["{{baseUrl}}"],
+              "port": "8003",
+              "path": ["api", "movies"],
+              "query": [
+                {"key": "page", "value": "1"},
+                {"key": "limit", "value": "20"}
+              ]
+            }
+          }
+        },
+        {
+          "name": "Search Movies",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}:8003/api/movies/search?q=Parasite&page=1&limit=5",
+              "host": ["{{baseUrl}}"],
+              "port": "8003",
+              "path": ["api", "movies", "search"],
+              "query": [
+                {"key": "q", "value": "Parasite"},
+                {"key": "page", "value": "1"},
+                {"key": "limit", "value": "5"}
+              ]
+            }
+          }
+        },
+        {
+          "name": "Random Movies",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}:8003/api/movies/random?limit=5",
+              "host": ["{{baseUrl}}"],
+              "port": "8003",
+              "path": ["api", "movies", "random"],
+              "query": [{"key": "limit", "value": "5"}]
+            }
+          }
+        },
+        {
+          "name": "Recommended Movies",
+          "request": {
+            "method": "GET",
+            "header": [
+              {"key": "Authorization", "value": "Bearer {{token}}"}
+            ],
+            "url": {
+              "raw": "{{baseUrl}}:8003/api/movies/recommended?limit=5",
+              "host": ["{{baseUrl}}"],
+              "port": "8003",
+              "path": ["api", "movies", "recommended"],
+              "query": [{"key": "limit", "value": "5"}]
+            }
+          }
+        },
+        {
+          "name": "Continue Watching",
+          "request": {
+            "method": "GET",
+            "header": [
+              {"key": "Authorization", "value": "Bearer {{token}}"}
+            ],
+            "url": {
+              "raw": "{{baseUrl}}:8003/api/movies/continue-watching?limit=10",
+              "host": ["{{baseUrl}}"],
+              "port": "8003",
+              "path": ["api", "movies", "continue-watching"],
+              "query": [{"key": "limit", "value": "10"}]
+            }
+          }
+        },
+        {
+          "name": "Get Movie Details",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}:8003/api/movies/6910be1d331526beef51dd13",
+              "host": ["{{baseUrl}}"],
+              "port": "8003",
+              "path": ["api", "movies", "6910be1d331526beef51dd13"]
+            }
+          }
+        },
+        {
+          "name": "Update Watch Progress",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {"key": "Authorization", "value": "Bearer {{token}}"},
+              {"key": "Content-Type", "value": "application/json"}
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"watchedSeconds\": 120,\n  \"totalSeconds\": 7200\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}:8003/api/movies/6910be1d331526beef51dd13/progress",
+              "host": ["{{baseUrl}}"],
+              "port": "8003",
+              "path": ["api", "movies", "6910be1d331526beef51dd13", "progress"]
+            }
+          }
+        },
+        {
+          "name": "Rate Movie",
+          "request": {
+            "method": "POST",
+            "header": [
+              {"key": "Authorization", "value": "Bearer {{token}}"},
+              {"key": "Content-Type", "value": "application/json"}
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"rating\": 4.5\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}:8003/api/movies/6910be1d331526beef51dd13/rate",
+              "host": ["{{baseUrl}}"],
+              "port": "8003",
+              "path": ["api", "movies", "6910be1d331526beef51dd13", "rate"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "User Service",
+      "item": [
+        {
+          "name": "Get Profile",
+          "request": {
+            "method": "GET",
+            "header": [
+              {"key": "Authorization", "value": "Bearer {{token}}"}
+            ],
+            "url": {
+              "raw": "{{baseUrl}}:8002/api/users/profile",
+              "host": ["{{baseUrl}}"],
+              "port": "8002",
+              "path": ["api", "users", "profile"]
+            }
+          }
+        },
+        {
+          "name": "Update Profile",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {"key": "Authorization", "value": "Bearer {{token}}"},
+              {"key": "Content-Type", "value": "application/json"}
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"fullName\": \"Updated Name\",\n  \"phone\": \"+1234567890\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}:8002/api/users/profile",
+              "host": ["{{baseUrl}}"],
+              "port": "8002",
+              "path": ["api", "users", "profile"]
+            }
+          }
+        },
+        {
+          "name": "Get Notifications",
+          "request": {
+            "method": "GET",
+            "header": [
+              {"key": "Authorization", "value": "Bearer {{token}}"}
+            ],
+            "url": {
+              "raw": "{{baseUrl}}:8002/api/users/notifications?page=1&limit=20",
+              "host": ["{{baseUrl}}"],
+              "port": "8002",
+              "path": ["api", "users", "notifications"],
+              "query": [
+                {"key": "page", "value": "1"},
+                {"key": "limit", "value": "20"}
+              ]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

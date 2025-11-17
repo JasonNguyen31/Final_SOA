@@ -3,6 +3,7 @@ from app.controllers.movie_controller import *
 from app.schemas.movie_dto import MovieFilterQuery, SearchQuery, WatchProgressDTO, RateMovieDTO
 from app.core.rate_limiter import rate_limit
 from app.middlewares.jwt_middleware import verify_token, verify_token_optional
+from app.core.response import success
 # New controllers are imported via * from app.controllers.movie_controller
 router = APIRouter(tags=["Movies"])
 """
@@ -52,9 +53,9 @@ async def list_movies(
 @router.get("/search")
 async def search(
     query: SearchQuery = Depends(),
-    user_payload=Depends(verify_token)
+    user_payload=Depends(verify_token_optional)
 ):
-    user_id = user_payload.get("sub") if isinstance(user_payload, dict) else user_payload
+    user_id = user_payload.get("sub") if isinstance(user_payload, dict) and user_payload else None
     return await search_controller(
         query.q,
         user_id,
@@ -127,6 +128,12 @@ async def random(
 @router.get("/special/movie-of-week")
 async def movie_of_week():
     return await movie_of_week_controller()
+
+# GENRES - Get all unique genres
+@router.get("/genres")
+async def get_genres():
+    from app.services.movie_service import get_all_genres
+    return success(await get_all_genres())
 
 # DETAIL – GENERIC (MUST BE LAST)
 @router.get("/{movie_id}")

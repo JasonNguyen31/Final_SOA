@@ -115,6 +115,7 @@ export const MovieWatch = () => {
 					videoUrl={movieData.videoUrl}
 					title={movieData.title}
 					currentEpisode={currentEpisode}
+					movieId={id}
 				/>
 
 				{/* Movie Info & Episodes */}

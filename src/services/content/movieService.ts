@@ -72,6 +72,7 @@ export interface MovieQueryParams {
 	isFeatured?: boolean
 	sortBy?: 'viewCount' | 'rating' | 'releaseYear'
 	order?: 'asc' | 'desc'
+	type?: string
 }
 
 export interface PaginatedMovies {
@@ -144,15 +145,6 @@ class MovieService {
 		return response.data.data
 	}
 
-	/**
-	 * Search movies
-	 */
-	async searchMovies(query: string, params?: MovieQueryParams): Promise<PaginatedMovies> {
-		const response = await movieApiClient.get<{success: boolean, data: PaginatedMovies}>(`${this.baseUrl}/search`, {
-			params: { q: query, ...params }
-		})
-		return response.data.data
-	}
 
 	/**
 	 * Get user's watch history
@@ -185,7 +177,10 @@ class MovieService {
 		movieId: string,
 		progress: { currentTime: number; duration: number }
 	): Promise<WatchProgress> {
-		const response = await movieApiClient.put<{success: boolean, data: WatchProgress}>(`${this.baseUrl}/${movieId}/progress`, progress)
+		const response = await movieApiClient.put<{success: boolean, data: WatchProgress}>(`${this.baseUrl}/${movieId}/progress`, {
+			watchedSeconds: Math.floor(progress.currentTime),
+			totalSeconds: Math.floor(progress.duration)
+		})
 		return response.data.data
 	}
 
@@ -244,6 +239,33 @@ class MovieService {
 	async getMovieOfTheWeek(): Promise<Movie> {
 		const response = await movieApiClient.get<{success: boolean, data: Movie}>(`${this.baseUrl}/special/movie-of-week`)
 		return response.data.data
+	}
+
+	/**
+	 * Get all unique genres
+	 */
+	async getGenres(): Promise<string[]> {
+		const response = await movieApiClient.get<{success: boolean, data: string[]}>(`${this.baseUrl}/genres`)
+		return response.data.data
+	}
+
+	/**
+	 * Search movies by query
+	 */
+	async searchMovies(query: string, page: number = 1, limit: number = 5): Promise<PaginatedMovies> {
+		const response = await movieApiClient.get<{success: boolean, data: {movies: Movie[], pagination: {total: number, page: number, limit: number}}}>(`${this.baseUrl}/search`, {
+			params: { q: query, page, limit }
+		})
+
+		return {
+			movies: response.data.data.movies || [],
+			pagination: {
+				total: response.data.data.pagination.total || 0,
+				page: response.data.data.pagination.page || page,
+				limit: response.data.data.pagination.limit || limit,
+				totalPages: Math.ceil((response.data.data.pagination.total || 0) / (response.data.data.pagination.limit || limit))
+			}
+		}
 	}
 
 	// Admin methods

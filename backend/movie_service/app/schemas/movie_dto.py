@@ -14,6 +14,7 @@ class MovieFilterQuery(BaseModel):
     isPremium: Optional[bool] = None
     isFeatured: Optional[bool] = None
     search: Optional[str] = None
+    type: Optional[str] = None
 
     @validator("genre")
     def normalize_genre(cls, v):

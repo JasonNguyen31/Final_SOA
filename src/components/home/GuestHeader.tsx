@@ -1,7 +1,10 @@
-import { Search, ChevronDown } from 'lucide-react'
+import { ChevronDown } from 'lucide-react'
 import { useState, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
 import '@/styles/GuestHeader.css'
 import logoCoverImage from '@/assets/images/header-logo.jpg'
+import { movieService } from '@/services/content/movieService'
+import { SearchBox } from '@/components/search/SearchBox'
 
 interface GuestHeaderProps {
     onLogin: () => void
@@ -9,19 +12,34 @@ interface GuestHeaderProps {
 }
 
 export const GuestHeader = ({ onLogin, onRegister }: GuestHeaderProps) => {
+    const navigate = useNavigate()
     const [showMoviesMenu, setShowMoviesMenu] = useState(false)
     const [showBooksMenu, setShowBooksMenu] = useState(false)
     const [hoverMovies, setHoverMovies] = useState(false)
     const [hoverBooks, setHoverBooks] = useState(false)
     const [moviesClickLocked, setMoviesClickLocked] = useState(false)
     const [booksClickLocked, setBooksClickLocked] = useState(false)
+    const [genres, setGenres] = useState<string[]>([])
+
+    // Fetch genres on mount
+    useEffect(() => {
+        const fetchGenres = async () => {
+            try {
+                const fetchedGenres = await movieService.getGenres()
+                setGenres(fetchedGenres)
+            } catch (error) {
+                console.error('Error fetching genres:', error)
+            }
+        }
+        fetchGenres()
+    }, [])
 
     // Handle clicks outside dropdowns
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
             const target = event.target as HTMLElement
-            
-            if (!target.closest('.nav-dropdown')) {
+
+            if (!target.closest('.guest-nav-dropdown')) {
                 if (moviesClickLocked) {
                     setShowMoviesMenu(false)
                     setMoviesClickLocked(false)
@@ -102,11 +120,23 @@ export const GuestHeader = ({ onLogin, onRegister }: GuestHeaderProps) => {
                                     <ChevronDown className="guest-nav-icon" />
                                 </button>
                                 {showMoviesMenu && (
-                                    <div className="guest-dropdown-menu">
-                                        <a href="/movies/action" className="guest-dropdown-item">Action</a>
-                                        <a href="/movies/comedy" className="guest-dropdown-item">Comedy</a>
-                                        <a href="/movies/drama" className="guest-dropdown-item">Drama</a>
-                                        <a href="/movies/romance" className="guest-dropdown-item">Romance</a>
+                                    <div className="guest-dropdown-menu genres-dropdown">
+                                        {genres.map((genre) => (
+                                            <button
+                                                key={genre}
+                                                onMouseDown={(e) => {
+                                                    e.preventDefault()
+                                                    e.stopPropagation()
+                                                    console.log('[GuestHeader] Navigating to genre:', genre)
+                                                    navigate(`/?genre=${encodeURIComponent(genre)}`)
+                                                    setShowMoviesMenu(false)
+                                                    setMoviesClickLocked(false)
+                                                }}
+                                                className="guest-dropdown-item"
+                                            >
+                                                {genre}
+                                            </button>
+                                        ))}
                                     </div>
                                 )}
                             </div>
@@ -160,14 +190,7 @@ export const GuestHeader = ({ onLogin, onRegister }: GuestHeaderProps) => {
                         </nav>
 
                         {/* Search Bar */}
-                        <div className="guest-search-box">
-                            <input
-                                type="text"
-                                placeholder="Search for your fave anime"
-                                className="guest-search-input"
-                            />
-                            <Search className="guest-search-icon" />
-                        </div>
+                        <SearchBox placeholder="Search for your fave anime" />
 
                         {/* Auth Buttons */}
                         <div className="guest-auth-buttons">

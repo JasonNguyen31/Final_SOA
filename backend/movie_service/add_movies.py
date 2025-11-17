@@ -8,7 +8,7 @@ from motor.motor_asyncio import AsyncIOMotorClient
 from datetime import datetime
 
 # MongoDB connection
-MONGO_URI = "mongodb://mongo:27017"
+MONGO_URI = "mongodb://localhost:27017"
 DATABASE_NAME = "ONLINE_ENTERTAINMENT_PLATFORM"
 
 movies_data = [

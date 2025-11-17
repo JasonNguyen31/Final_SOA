@@ -1,6 +1,5 @@
 /* ContentGrid Styles */
 .content-grid-wrapper {
-
     min-height: calc(100vh - 80px);
     padding: 40px 0;
     position: relative;
@@ -41,7 +40,7 @@
 .content-main {
     background: #0000003b;
     border-radius: 8px;
-    padding: 30px;
+    padding: 20px;
     display: flex;
     flex-direction: column;
     border: 1px solid rgba(255, 255, 255, 0.1);
@@ -55,13 +54,13 @@
     align-items: center;
     margin-bottom: 30px;
     flex-shrink: 0;
-    /* Không co lại */
 }
 
 .content-tabs {
     display: flex;
     align-items: center;
-    gap: 20px;
+    gap: 25px;
+    margin-left: 10px;
 }
 
 .content-tab {
@@ -70,7 +69,6 @@
     font-weight: 600;
     text-decoration: none;
     padding: 12px 0;
-    border-bottom: 3px solid transparent;
     margin-bottom: -2px;
     transition: all 0.3s ease;
     position: relative;
@@ -78,7 +76,8 @@
 
 .content-tab.active {
     color: #ff6b35;
-    border-bottom-color: #ff6b35;
+
+    border-bottom: 1px solid #ff6b35;
 }
 
 .content-tab:hover {
@@ -95,12 +94,10 @@
 .content-cards {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    row-gap: 30px;
+    row-gap: 20px;
     column-gap: 20px;
     flex: 1;
-    /* Chiếm không gian còn lại */
-    align-content: space-around;
-    /* Distribute rows evenly */
+    align-content: start;
     min-height: auto;
 }
 
@@ -123,7 +120,7 @@
 /* Card Image */
 .card-image-container {
     position: relative;
-    aspect-ratio: 3/4;
+    aspect-ratio: 3/3;
     overflow: hidden;
     background: linear-gradient(135deg, #e0e0e0 0%, #c0c0c0 100%);
 }
@@ -215,7 +212,7 @@
 
 /* Card Info Section */
 .card-info {
-    padding: 16px;
+    padding: 13px;
 }
 
 .card-meta {
@@ -245,7 +242,11 @@
     display: flex;
     align-items: center;
     gap: 8px;
-    margin-bottom: 12px;
+    margin-bottom: 15px;
+}
+
+.card-rating .rating-text {
+    font-size: 10px;
 }
 
 .rating-stars {
@@ -436,7 +437,6 @@
     align-items: center;
     gap: 8px;
     flex-shrink: 0;
-    margin-top: 40px;
 }
 
 .pagination-button {
@@ -490,7 +490,7 @@
 
 .anime-week-image {
     width: 100%;
-    aspect-ratio: 3/4;
+    aspect-ratio: 4/4;
     border-radius: 8px;
     object-fit: cover;
     background: linear-gradient(135deg, #3a3a3a 0%, #2a2a2a 100%);

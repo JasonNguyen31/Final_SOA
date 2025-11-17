@@ -1,14 +1,16 @@
-import { useState, useRef } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import { Play, Pause, Volume2, VolumeX, Maximize, RotateCcw, RotateCw, Settings } from 'lucide-react'
+import { movieService } from '@/services/content/movieService'
 import '@/styles/VideoPlayer.css'
 
 interface VideoPlayerProps {
     videoUrl: string
     title: string
     currentEpisode: number
+    movieId?: string
 }
 
-export const VideoPlayer = ({ videoUrl }: VideoPlayerProps) => {
+export const VideoPlayer = ({ videoUrl, movieId }: VideoPlayerProps) => {
     // Check if videoUrl is an embedded streaming link
     const isEmbedded = videoUrl.includes('opstream') ||
                        videoUrl.includes('ophim') ||
@@ -26,6 +28,47 @@ export const VideoPlayer = ({ videoUrl }: VideoPlayerProps) => {
     const [currentTime, setCurrentTime] = useState(0)
     const [duration, setDuration] = useState(0)
     const videoRef = useRef<HTMLVideoElement>(null)
+    const progressIntervalRef = useRef<NodeJS.Timeout | null>(null)
+
+    // Save progress to database
+    const saveProgress = async (watchedSeconds: number) => {
+        if (!movieId || watchedSeconds <= 0 || !duration) return
+
+        try {
+            await movieService.updateWatchProgress(movieId, {
+                currentTime: watchedSeconds,
+                duration: Math.floor(duration)
+            })
+            console.log('[VideoPlayer] Progress saved:', watchedSeconds, '/', Math.floor(duration))
+        } catch (error) {
+            console.error('[VideoPlayer] Failed to save progress:', error)
+        }
+    }
+
+    // Auto-save progress every 10 seconds while playing
+    useEffect(() => {
+        if (isPlaying && movieId && currentTime > 0) {
+            // Save progress every 10 seconds
+            progressIntervalRef.current = setInterval(() => {
+                saveProgress(Math.floor(currentTime))
+            }, 10000)
+        }
+
+        return () => {
+            if (progressIntervalRef.current) {
+                clearInterval(progressIntervalRef.current)
+            }
+        }
+    }, [isPlaying, currentTime, movieId])
+
+    // Save progress when component unmounts (user leaves page)
+    useEffect(() => {
+        return () => {
+            if (movieId && currentTime > 0) {
+                saveProgress(Math.floor(currentTime))
+            }
+        }
+    }, [movieId, currentTime])
 
     const togglePlay = () => {
         if (videoRef.current) {

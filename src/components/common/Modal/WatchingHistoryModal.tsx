@@ -80,7 +80,7 @@ export const WatchingHistoryModal = ({ isOpen, onClose }: WatchingHistoryModalPr
 	const handleContinueWatching = (movieId: string, currentTime?: number) => {
 		onClose()
 		// Navigate to watch page with timestamp
-		const url = currentTime ? `/watch/${movieId}?t=${currentTime}` : `/watch/${movieId}`
+		const url = currentTime ? `/movies/${movieId}/watch?t=${currentTime}` : `/movies/${movieId}/watch`
 		window.location.href = url
 	}
 
