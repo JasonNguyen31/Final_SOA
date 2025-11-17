@@ -173,14 +173,14 @@
 .input-icon {
     position: absolute;
     left: 16px;
-    width: 20px;
-    height: 20px;
-    color: #888;
+    width: 22px;
+    height: 22px;
+    color: #666;
     pointer-events: none;
-    transition: color 0.3s ease;
+    transition: color 0.3s cubic-bezier(0.23, 1, 0.320, 1);
+    z-index: 2;
 }
 
-.form-input:focus ~ .input-icon,
 .input-wrapper:has(.form-input:focus) .input-icon {
     color: #ff6b35;
 }
@@ -188,38 +188,44 @@
 .form-input {
     width: 100%;
     padding: 14px 16px 14px 48px;
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.04);
+    border: 2px solid rgba(255, 255, 255, 0.08);
+    border-radius: 10px;
     color: white;
     font-size: 15px;
-    transition: all 0.3s ease;
+    font-weight: 500;
+    transition: all 0.3s cubic-bezier(0.23, 1, 0.320, 1);
+    position: relative;
 }
 
 .form-input:focus {
     outline: none;
     border-color: #ff6b35;
-    background: rgba(255, 255, 255, 0.08);
+    background: rgba(255, 107, 53, 0.08);
+    box-shadow: 0 0 0 3px rgba(255, 107, 53, 0.1), inset 0 0 20px rgba(255, 107, 53, 0.05);
 }
 
 .form-input::placeholder {
-    color: #888;
+    color: #777;
     font-weight: 400;
+    opacity: 0.8;
 }
 
 .form-input:focus::placeholder {
     color: #999;
+    opacity: 0.6;
 }
 
 /* Input Error State */
 .form-input.input-error {
     border-color: #ff4444;
-    background: rgba(255, 68, 68, 0.05);
+    background: rgba(255, 68, 68, 0.06);
 }
 
 .form-input.input-error:focus {
     border-color: #ff4444;
     background: rgba(255, 68, 68, 0.08);
+    box-shadow: 0 0 0 3px rgba(255, 68, 68, 0.1), inset 0 0 20px rgba(255, 68, 68, 0.05);
 }
 
 /* Field Error Message */
