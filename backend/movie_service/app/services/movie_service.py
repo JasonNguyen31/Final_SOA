@@ -495,9 +495,10 @@ async def get_random_movies(limit: int = 5):
         try:
             cached = await cache.get(cache_key_str)
             if cached:
+                print(f"[RANDOM MOVIES] Cache hit: {cache_key_str}")
                 return json.loads(cached)
         except Exception as e:
-            print(f"Redis random movies error: {e}")
+            print(f"[RANDOM MOVIES] Redis error: {e}")
 
     # Get total count of active movies
     total_count = await movies_collection.count_documents({
@@ -505,7 +506,10 @@ async def get_random_movies(limit: int = 5):
         "isDeleted": False
     })
 
+    print(f"[RANDOM MOVIES] Total active movies: {total_count}")
+
     if total_count == 0:
+        print("[RANDOM MOVIES] No active movies found in database")
         return []
 
     # Get random movies
@@ -527,6 +531,8 @@ async def get_random_movies(limit: int = 5):
     ]
 
     movies = await movies_collection.aggregate(pipeline).to_list(limit)
+
+    print(f"[RANDOM MOVIES] Fetched {len(movies)} random movies")
 
     if cache:
         try:
