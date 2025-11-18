@@ -3,16 +3,21 @@
  * Configures the URLs for all microservices
  */
 
-// Get base URL from environment or default to localhost
-const getBackendUrl = (port: number, path: string = '') => {
+// Get service URL from environment variables or fallback to localhost
+const getServiceUrl = (serviceEnvVar: string, defaultPort: number): string => {
+	const envUrl = import.meta.env[serviceEnvVar]
+	if (envUrl) {
+		return envUrl
+	}
+	// Fallback to localhost for development
 	const host = import.meta.env.VITE_BACKEND_HOST || 'http://localhost'
-	return `${host}:${port}${path}`
+	return `${host}:${defaultPort}`
 }
 
 export const BACKEND_CONFIG = {
 	// Auth Service (Port 8001)
 	AUTH_SERVICE: {
-		BASE_URL: getBackendUrl(8001),
+		BASE_URL: getServiceUrl('VITE_AUTH_SERVICE_URL', 8001),
 		ENDPOINTS: {
 			REGISTER: '/api/auth/register',
 			VERIFY_OTP: '/api/auth/verify-otp',
@@ -27,7 +32,7 @@ export const BACKEND_CONFIG = {
 
 	// User Service (Port 8002)
 	USER_SERVICE: {
-		BASE_URL: getBackendUrl(8002),
+		BASE_URL: getServiceUrl('VITE_USER_SERVICE_URL', 8002),
 		ENDPOINTS: {
 			PROFILE: '/api/users/profile',
 			UPDATE_PROFILE: '/api/users/profile',
@@ -40,7 +45,7 @@ export const BACKEND_CONFIG = {
 
 	// Movie Service (Port 8003)
 	MOVIE_SERVICE: {
-		BASE_URL: getBackendUrl(8003),
+		BASE_URL: getServiceUrl('VITE_MOVIE_SERVICE_URL', 8003),
 		ENDPOINTS: {
 			LIST: '/api/movies',
 			SEARCH: '/api/movies/search',
@@ -58,7 +63,7 @@ export const BACKEND_CONFIG = {
 
 	// Book Service (Port 8004)
 	BOOK_SERVICE: {
-		BASE_URL: getBackendUrl(8004),
+		BASE_URL: getServiceUrl('VITE_BOOK_SERVICE_URL', 8004),
 		ENDPOINTS: {
 			LIST: '/api/books',
 			GET: (id: string) => `/api/books/${id}`,
@@ -71,7 +76,7 @@ export const BACKEND_CONFIG = {
 
 	// Collection Service (Port 8005)
 	COLLECTION_SERVICE: {
-		BASE_URL: getBackendUrl(8005),
+		BASE_URL: getServiceUrl('VITE_COLLECTION_SERVICE_URL', 8005),
 		ENDPOINTS: {
 			LIST: '/api/collections',
 			CREATE: '/api/collections',
