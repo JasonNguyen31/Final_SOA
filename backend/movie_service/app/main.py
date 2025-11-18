@@ -17,11 +17,13 @@ app.add_middleware(
     allow_origins=[
         "http://localhost:3000",
         "http://localhost:3002",
+        "http://localhost:5173",
         "https://final-soa.vercel.app"
     ],  # Frontend URLs
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
+    expose_headers=["*"]
 )
 
 app.state.limiter = limiter

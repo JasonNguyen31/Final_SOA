@@ -1,5 +1,6 @@
 from fastapi import FastAPI, HTTPException, Request
 from fastapi.responses import JSONResponse
+from fastapi.middleware.cors import CORSMiddleware
 from app.routes import book_routes
 from app.core.limiter import limiter
 from slowapi.middleware import SlowAPIMiddleware
@@ -9,6 +10,21 @@ from app.core.database import db, movies_collection, watching_progress_collectio
 import asyncio
 
 app = FastAPI(title="Book Service")
+
+# CORS Configuration
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=[
+        "http://localhost:3000",
+        "http://localhost:5173",
+        "https://final-soa.vercel.app"
+    ],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+    expose_headers=["*"]
+)
+
 app.state.limiter = limiter
 app.add_middleware(SlowAPIMiddleware)
 
